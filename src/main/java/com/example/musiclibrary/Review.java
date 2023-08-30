@@ -1,13 +1,17 @@
 package com.example.musiclibrary;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "com.example.demo.raz.music_library.Review")
 @Table(name = "review")
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Data
 public class Review {

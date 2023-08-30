@@ -4,9 +4,10 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.musiclibrary.MusicLibrary.CUSTOM_FORMATTER;
 
@@ -14,13 +15,16 @@ import static com.example.musiclibrary.MusicLibrary.CUSTOM_FORMATTER;
 @Service
 public class ReviewService {
 
-    public static ArrayList<Review> reviews = new ArrayList<>();
-    public static String reviewAverage;
+    public String reviewAverage;
     private static final java.text.DecimalFormat DecimalFormat = new DecimalFormat("0.0");
-
 
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @PostConstruct
+    private void postConstruct() {
+        reviewAverage = calculateStarsAverage();
+    }
 
 
     public Review addReview(Review review) throws Exception {
@@ -29,7 +33,6 @@ public class ReviewService {
             review.setSubmittedOn(LocalDateTime.now());
             review.setSubmittedOnStringFormat(LocalDateTime.now().format(CUSTOM_FORMATTER));
 
-            reviews.add(review);
             reviewRepository.save(review);
 
             calculateStarsAverage();
@@ -41,9 +44,17 @@ public class ReviewService {
     }
 
 
-    private void calculateStarsAverage() {
+    public List<Review> readReviews() {
+        List<Review> reviews = reviewRepository.findAll();
+        System.out.println("Those are all reviews: " + reviews);
+        return reviews;
+    }
+
+
+    private String calculateStarsAverage() {
         float average;
         int sum = 0;
+        List<Review> reviews = reviewRepository.findAll();
         float howManyReviews = reviews.size();
 
         for(Review review : reviews) {
@@ -52,6 +63,6 @@ public class ReviewService {
         average = sum / howManyReviews;
         System.out.println("the average value is: " + average);
         reviewAverage = DecimalFormat.format(average);
-        //return average;
+        return DecimalFormat.format(average);
     }
 }

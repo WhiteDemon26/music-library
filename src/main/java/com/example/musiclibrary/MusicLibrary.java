@@ -1,14 +1,12 @@
 package com.example.musiclibrary;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Thread.sleep;
 import static java.util.Comparator.comparing;
@@ -35,6 +33,8 @@ public class MusicLibrary {
     private boolean alwaysRandomSongModeOn;
 
     // static serve a condividere a tutti gli utenti una determinata cosa che devono avere in comune che scelgo io di fargliela vedere e avere
+    @Autowired
+    private MusicRepository musicRepository;
 
 
     public void playNextSongModeOn() {
@@ -235,13 +235,25 @@ public class MusicLibrary {
     }
 
 
+    public Song addSong(Song newSong) {
+        newSong.setAddedOn(LocalDateTime.now());
+        newSong.setAddedOnStringFormat(LocalDateTime.now().format(CUSTOM_FORMATTER));
+        this.musicRepository.save(newSong);
+        String message = "you added new song (see this response's body) !!";
+        System.out.println(message);
+        return newSong;
+    }
+
     public List<Song> addSongs(List<Song> newSongs) {
 
         for (Song song : newSongs) {
             song.setAddedOn(LocalDateTime.now());
             song.setAddedOnStringFormat(LocalDateTime.now().format(CUSTOM_FORMATTER));
         }
+
         this.songs.addAll(newSongs);
+        this.musicRepository.saveAll(newSongs);
+
         String message = "you added new songs (see this response's body) !!";
         System.out.println(message);
         return newSongs;
@@ -250,9 +262,18 @@ public class MusicLibrary {
 
     public List<Song> deleteSongs() {
         ArrayList<Song> songsCopy = new ArrayList<>(this.songs);
+
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Do you want to delete the songs even from the DB? ");
+        Boolean deleteDBSongs = scan.nextBoolean();
+
         for(Song song : songsCopy) {
             if(song.isSelected()){
                 this.songs.remove(song);
+                if(deleteDBSongs) {
+                    musicRepository.delete(song);
+                    System.out.println("Your songs are deleted from the DB. ");
+                }
             }
         }
         return songs;

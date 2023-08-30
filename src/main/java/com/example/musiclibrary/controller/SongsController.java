@@ -59,7 +59,7 @@ public class SongsController {
     }
 
 
-    @GetMapping("/select_songs_mostPlayed")
+    @GetMapping("/find_songs_most_played")
     public ResponseEntity<List<Song>> songsMostPlayed() {
         String message = "you asked to see the songs most played!!";
         System.out.println(message);

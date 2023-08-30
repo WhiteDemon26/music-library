@@ -24,7 +24,7 @@ public class ReviewsController {
     public ResponseEntity<List<Review>> showReviews() {
         String message = "you asked to see the reviews (see this response's body) !!";
         System.out.println(message);
-        return new ResponseEntity<>(ReviewService.reviews, HttpStatus.OK);
+        return new ResponseEntity<>(reviewService.readReviews(), HttpStatus.OK);
     }
 
 
@@ -32,7 +32,7 @@ public class ReviewsController {
     public ResponseEntity<String> calculateAverageReviews() {
         String message = "you asked to see the star average of all reviews!!";
         System.out.println(message);
-        return new ResponseEntity<>(ReviewService.reviewAverage, HttpStatus.OK);
+        return new ResponseEntity<>(reviewService.getReviewAverage(), HttpStatus.OK);
     }
 
 

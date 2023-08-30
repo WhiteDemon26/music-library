@@ -75,7 +75,8 @@ public class MusicLibraryTest {
 
     public void showAllReviews() {
 
-        for (Review review : ReviewService.reviews) {
+        ReviewService reviewService = new ReviewService();
+        for (Review review : reviewService.readReviews()) {
             System.out.println("Text of review: " + review.getText()
                     + " Stars of review: " + review.getStars()
                     + " Date and time of review: " + review.getSubmittedOnStringFormat());

@@ -150,7 +150,6 @@ public class NewMLMain {
     //  hint: first of all, take a look at the right annotation to use (see Tor Browser)
     //  hint: what variable of the songs in the body of your http request be initialized? And with what value?
 
-
     //  improves the logic of addSongs() method in ML: are there pointless variables?
 
     //  correct the errors in the showDownloadedSongs(), downloadSongs() controllers
@@ -167,9 +166,28 @@ public class NewMLMain {
     // Create a 'review' table in the 'raz' database with the same structure of the Review class. (turn on the DB and use DBeaver).
     // Add the required persistence annotations to the Review class and persist a few Reviews on the DB
 
+    //  it makes no sense for a user to have a copy of all the reviews permanently in his local memory.
+    //  Reviews should be read when it is requested, but not stored.
+    //  Change ReviewService to make it stateless (that is a class with no memory of the data, just the logic to manipulate it)
+    //  Change ReviewsController to make it get from the DB all the information it reads from ReviewService'state
+    //  hint: what variable in ReviewService is the one that "contacts" the DB?
+
+    //  create a songs table in the DB using DBeaver and edit the Song class accordingly
+
+    //  change the controller & service to add a song in the db when you download one
+
+    //  create a json file with all the songs you have worked so far (Bailando, etc.) and save them in the db
+
+    //  change the delete functionality of your app: when you delete a song, ask the user if he wants to delete the remote file as well
+    //  that is the copy of the song in the DB. If he says yes, delete those songs there too.
 
 
 
+    // TODO: create subpackages for your classes and interfaces as you did for the controllers: service, repository, model. Move the files accordingly
+
+    // TODO: right now all the previously downloaded songs are still in the DB, but not in the local memory of your app when it runs.
+    //  Change this: when you run your app, the local memory must be synchronized with the remote one.
+    //  hint: how did we solve a similar problems for the average of the reviews?
 
 
 
