@@ -1,9 +1,19 @@
-package com.example.musiclibrary;
+package com.example.musiclibrary.service;
 
+import com.amazonaws.services.devicefarm.model.Test;
+import com.example.musiclibrary.repository.MusicRepository;
+import com.example.musiclibrary.model.Song;
+import com.example.musiclibrary.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -12,16 +22,18 @@ import static java.lang.Thread.sleep;
 import static java.util.Comparator.comparing;
 
 @Data
-@Component
-public class MusicLibrary {
+@Service
+public class MusicLibraryService {
 
     public static final String APP_VERSION = "0.1";
     public final static DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    private ArrayList<Song> songs = new ArrayList<>();
-    public static ArrayList<Song> giftForNewUser = defaultSongs();
-// private viene usata solo dentro l'istanza o dentro l'oggetto creato per essere chiamato fuori da questa classe bisogna chiamare il metodo getter
+    private List<Song> songs = new ArrayList<>();
 
+    // static serve a condividere a tutti gli utenti una determinata cosa che devono avere in comune che scelgo io di fargliela vedere e avere
+    public static ArrayList<Song> giftForNewUser = defaultSongs();
+
+    // private viene usata solo dentro l'istanza o dentro l'oggetto creato per essere chiamato fuori da questa classe bisogna chiamare il metodo getter
     private Song songPlayingNow;
     private Boolean isPlayingSongPaused;
     private ArrayList<Song> songsWithTimesPlayed;
@@ -32,9 +44,13 @@ public class MusicLibrary {
     private boolean alwaysSameSongModeOn;
     private boolean alwaysRandomSongModeOn;
 
-    // static serve a condividere a tutti gli utenti una determinata cosa che devono avere in comune che scelgo io di fargliela vedere e avere
     @Autowired
     private MusicRepository musicRepository;
+
+    @PostConstruct
+    private void postConstruct() {
+        this.songs = musicRepository.findAll();
+    }
 
 
     public void playNextSongModeOn() {
@@ -173,7 +189,8 @@ public class MusicLibrary {
     }
 
 
-    public static ArrayList<Song> defaultSongs() {
+
+    public static ArrayList<Song> defaultSongs() throws Exception {
 
         ArrayList<Song> defaultSongs = new ArrayList<>();
         Song song1 = Song.builder()
@@ -200,6 +217,34 @@ public class MusicLibrary {
                         "I want it all, I want it all, I want it all, and I want it now")
                 .build();
         defaultSongs.addAll(List.of(song1, song2, song3));
+
+
+        // TODO: add the maven dipendency !!
+        JSONParser parser = new JSONParser();
+        JSONArray a = (JSONArray) parser.parse(new FileReader("c:\\exer4-courses.json"));
+        //Object obj = new JSONParser().parse(new FileReader("JSONExample.json"));
+
+        for (Object o : a) {
+            JSONObject person = (JSONObject) o;
+
+            String name = (String) person.get("name");
+            System.out.println(name);
+
+            String city = (String) person.get("city");
+            System.out.println(city);
+
+            String job = (String) person.get("job");
+            System.out.println(job);
+
+            JSONArray cars = (JSONArray) person.get("cars");
+
+            for (Object c : cars) {
+                System.out.println(c+"");
+            }
+        }
+
+
+
         return defaultSongs;
     }
 
@@ -344,7 +389,9 @@ public class MusicLibrary {
 
     public ArrayList<Song> mostPlayed() {
 
-        ArrayList<Song> songsCopy = (ArrayList<Song>)this.songs.clone();
+        // ArrayList<Song> songsCopy = (ArrayList<Song>)this.songs.clone();
+        // not valid anymore: songs is a List
+        ArrayList<Song> songsCopy = new ArrayList<Song>(this.songs);
 
         // we could remove the songs that have never been listened to through:
         // songsCopy = new ArrayList<>(mostPlayedSongs.stream().filter(song -> song.timesPlayed != 0).collect(Collectors.toList()));

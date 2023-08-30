@@ -1,5 +1,10 @@
 package com.example.musiclibrary;
 
+import com.example.musiclibrary.model.Review;
+import com.example.musiclibrary.model.Song;
+import com.example.musiclibrary.service.MusicLibraryService;
+import com.example.musiclibrary.service.ReviewService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,8 +19,8 @@ public class MusicLibraryTest {
 
 
     public void getTimesPlayedSong() {
-        MusicLibrary musicLibrary = new MusicLibrary();
-        ArrayList<Song> returnMusic = musicLibrary.mostPlayed();
+        MusicLibraryService musicLibraryService = new MusicLibraryService();
+        ArrayList<Song> returnMusic = musicLibraryService.mostPlayed();
         for (Song song : returnMusic) {
             System.out.println(song.getSongName() + "has been played " + song.getTimesPlayed() + " times");
         }
@@ -27,17 +32,17 @@ public class MusicLibraryTest {
 
         ArrayList<Song> fakeSongs = new ArrayList<>();
         fakeSongs.addAll((returnFakeSongs()));
-        MusicLibrary musicLibrary = new MusicLibrary();
-        musicLibrary.setSongs(fakeSongs);
+        MusicLibraryService musicLibraryService = new MusicLibraryService();
+        musicLibraryService.setSongs(fakeSongs);
 
         Scanner modulo = new Scanner(System.in);
         System.out.println("select an title to listen: ");
         String title = modulo.nextLine();
 
-        fakeSongs = musicLibrary.searchSongByTitle(title);
+        fakeSongs = musicLibraryService.searchSongByTitle(title);
         Song firstSelectedSong = fakeSongs.get(0);
 
-        musicLibrary.playSong(firstSelectedSong);
+        musicLibraryService.playSong(firstSelectedSong);
         System.out.println("number of times this song was played: " + firstSelectedSong.getTimesPlayed());
 
         System.out.println("");
@@ -45,10 +50,10 @@ public class MusicLibraryTest {
         while (true) {
 
             System.out.println("Let's switch song!");
-            musicLibrary.nextSong();
-            System.out.println("now the playing song is: " + musicLibrary.getSongPlayingNow().getSongName());
-            System.out.println("number of times that the song " + musicLibrary.getSongPlayingNow().getSongName() +
-                    " played: " + musicLibrary.getSongPlayingNow().getTimesPlayed());
+            musicLibraryService.nextSong();
+            System.out.println("now the playing song is: " + musicLibraryService.getSongPlayingNow().getSongName());
+            System.out.println("number of times that the song " + musicLibraryService.getSongPlayingNow().getSongName() +
+                    " played: " + musicLibraryService.getSongPlayingNow().getTimesPlayed());
 
             sleep(4000);
 
@@ -57,7 +62,7 @@ public class MusicLibraryTest {
     }
 
     public void showAllSongsOfArtist() {
-        MusicLibrary musicLibrary = new MusicLibrary();
+        MusicLibraryService musicLibraryService = new MusicLibraryService();
         List<Song> returnMusic = new ArrayList<>();
         returnMusic.addAll((returnFakeSongs()));
 
@@ -67,7 +72,7 @@ public class MusicLibraryTest {
             System.out.println("select an artist to listen: ");
             String artist = modulo.nextLine();
 
-            returnMusic = musicLibrary.searchSongByArtist(artist);
+            returnMusic = musicLibraryService.searchSongByArtist(artist);
             System.out.println(returnMusic.stream().map(song -> song.getSongName()).collect(Collectors.toList()));
         }
     }
@@ -88,17 +93,17 @@ public class MusicLibraryTest {
 
     public void removeRandomSongs() throws InterruptedException {
         int range = 10;
-        MusicLibrary musicLibrary = new MusicLibrary();
+        MusicLibraryService musicLibraryService = new MusicLibraryService();
         ArrayList<Song> returnMusic = new ArrayList<>();
         returnMusic.addAll((returnFakeSongs()));
 
         while (true) {
             Random rand = new Random();
             int index = rand.nextInt(range);
-            ArrayList<Song> songs = musicLibrary.getSongs();
+            List<Song> songs = musicLibraryService.getSongs();
             Integer[] numbers = new Integer[]{index};
-            String message = musicLibrary.selectSongs(numbers);
-            musicLibrary.deleteSongs();
+            String message = musicLibraryService.selectSongs(numbers);
+            musicLibraryService.deleteSongs();
             System.out.println("remaining songs: " + songs.size());
             sleep(3000);
             range--;

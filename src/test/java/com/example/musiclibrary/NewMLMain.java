@@ -1,16 +1,20 @@
 package com.example.musiclibrary;
 
+import com.example.musiclibrary.model.Review;
+import com.example.musiclibrary.model.Song;
+import com.example.musiclibrary.model.SongLength;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static com.example.musiclibrary.MusicLibrary.CUSTOM_FORMATTER;
+import static com.example.musiclibrary.service.MusicLibraryService.CUSTOM_FORMATTER;
 
 public class NewMLMain {
 
 
-    public static void logBooleanFlags (ArrayList < Song > songs) {
+    public static void logBooleanFlags (ArrayList <Song> songs) {
         ArrayList<Integer> flags = new ArrayList<>();
 
         for (Song song : songs) {
@@ -110,7 +114,6 @@ public class NewMLMain {
     // test it with 'play always previous song' mode on
     // 20''') remove code duplicates from ML
 
-
     // 21): reorganize all the code below: all the songs and reviews need to be instantiated inside specific methods that return them in a list
     // so they're available when we need them just by calling these methods
     // 21'): integrate the new Spring Boot code into your app: use @Component and @Autowired where it makes sense to use them.
@@ -118,19 +121,16 @@ public class NewMLMain {
     // 21'''): create a new endpoint to get in return all the submitted reviews from users.
     // 21''): create a new endpoint to get in return the review average.
 
-
     //  22): create a specific package for your controller
     //  22'): all reviews need to be submitted with date & time of when an user sends them
     //  23''): transfer all the review-related functionalities that have so far been contained in ML to a new class ReviewService
     //  23'''): change the ML class so that all the review-related functionalities are delegated to ReviewService
     //  23''''): decide if ReviewService should be instantiated and managed by you or if Spring should do it
 
-
     // understand how the Comparable Interface works and changes both the Song class and the
     // Collections.sort(songsCopy, comparing(Song::getTimesPlayed).reversed()) instruction (line 356 of ML).
     // hint: don't give the sort() method a second argument, just let the Songs know how to compare themselves.
     // Verify that the outcome of the mostPlayed() method is the same
-
 
     // create a class with methods testing all their functionalities
 
@@ -181,13 +181,17 @@ public class NewMLMain {
     //  change the delete functionality of your app: when you delete a song, ask the user if he wants to delete the remote file as well
     //  that is the copy of the song in the DB. If he says yes, delete those songs there too.
 
+    // create subpackages for your classes and interfaces as you did for the controllers: service, repository, model. Move the files accordingly
 
-
-    // TODO: create subpackages for your classes and interfaces as you did for the controllers: service, repository, model. Move the files accordingly
-
-    // TODO: right now all the previously downloaded songs are still in the DB, but not in the local memory of your app when it runs.
+    // right now all the previously downloaded songs are still in the DB, but not in the local memory of your app when it runs.
     //  Change this: when you run your app, the local memory must be synchronized with the remote one.
     //  hint: how did we solve a similar problems for the average of the reviews?
+
+
+
+    // TODO: create a json file with all the default songs offered to all users that download the app.
+    //  See tor browser to learn how to read a json file from java and add a mechanism to load those songs every time the app starts,
+    //  but only if you don't have song records in the DB (that is the very first time you download the app)
 
 
 

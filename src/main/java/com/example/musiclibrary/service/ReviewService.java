@@ -1,5 +1,7 @@
-package com.example.musiclibrary;
+package com.example.musiclibrary.service;
 
+import com.example.musiclibrary.model.Review;
+import com.example.musiclibrary.repository.ReviewRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +11,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.musiclibrary.MusicLibrary.CUSTOM_FORMATTER;
+import static com.example.musiclibrary.service.MusicLibraryService.CUSTOM_FORMATTER;
 
 @Data
 @Service

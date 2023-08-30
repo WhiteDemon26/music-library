@@ -1,7 +1,7 @@
 package com.example.musiclibrary.controller;
 
-import com.example.musiclibrary.Review;
-import com.example.musiclibrary.ReviewService;
+import com.example.musiclibrary.model.Review;
+import com.example.musiclibrary.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
