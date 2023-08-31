@@ -1,19 +1,16 @@
 package com.example.musiclibrary.service;
 
-import com.amazonaws.services.devicefarm.model.Test;
 import com.example.musiclibrary.repository.MusicRepository;
 import com.example.musiclibrary.model.Song;
 import com.example.musiclibrary.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -50,6 +47,9 @@ public class MusicLibraryService {
     @PostConstruct
     private void postConstruct() {
         this.songs = musicRepository.findAll();
+        if(this.songs.isEmpty()) {
+            this.songs.addAll(musicRepository.saveAll(defaultSongs()));
+        }
     }
 
 
@@ -190,7 +190,7 @@ public class MusicLibraryService {
 
 
 
-    public static ArrayList<Song> defaultSongs() throws Exception {
+    public static ArrayList<Song> defaultSongs() {
 
         ArrayList<Song> defaultSongs = new ArrayList<>();
         Song song1 = Song.builder()
@@ -217,33 +217,6 @@ public class MusicLibraryService {
                         "I want it all, I want it all, I want it all, and I want it now")
                 .build();
         defaultSongs.addAll(List.of(song1, song2, song3));
-
-
-        // TODO: add the maven dipendency !!
-        JSONParser parser = new JSONParser();
-        JSONArray a = (JSONArray) parser.parse(new FileReader("c:\\exer4-courses.json"));
-        //Object obj = new JSONParser().parse(new FileReader("JSONExample.json"));
-
-        for (Object o : a) {
-            JSONObject person = (JSONObject) o;
-
-            String name = (String) person.get("name");
-            System.out.println(name);
-
-            String city = (String) person.get("city");
-            System.out.println(city);
-
-            String job = (String) person.get("job");
-            System.out.println(job);
-
-            JSONArray cars = (JSONArray) person.get("cars");
-
-            for (Object c : cars) {
-                System.out.println(c+"");
-            }
-        }
-
-
 
         return defaultSongs;
     }

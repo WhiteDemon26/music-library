@@ -187,17 +187,23 @@ public class NewMLMain {
     //  Change this: when you run your app, the local memory must be synchronized with the remote one.
     //  hint: how did we solve a similar problems for the average of the reviews?
 
+    //  create a json file with all the default songs offered to all users that download the app.
+    //  See tor browser to learn how to read a json file from java through Jackson ObjectMapper.
 
 
-    // TODO: create a json file with all the default songs offered to all users that download the app.
-    //  See tor browser to learn how to read a json file from java and add a mechanism to load those songs every time the app starts,
+    // TODO add a mechanism to load those songs every time the app starts,
     //  but only if you don't have song records in the DB (that is the very first time you download the app)
+
+
+    // TODO: add documentation on all the methods you have created so far in MLService. Use Javadoc (see tor browser)
+    //  add what the methods do and write down in a separate file all the classes and tools used to create them
+    //  with explanations about what they are and how they are used (this is for interviews)
 
 
 
     // create methods testing all the methods in ML (verify that the ones in MusicLibraryTest work and add others)
 
-    // add documentation on all the methods you have created so far
+    //
 
     // check that all the methods that execute a song increase the timesPlayed index and make sure this variable cannot be set
     // neither at construction time nor via setter.

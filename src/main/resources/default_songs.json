@@ -1,0 +1,32 @@
+[
+  {
+    "songName": "Take Me Home, Country Roads",
+    "artist": "John Denver",
+    "lyrics": "Country roads, take me home\nTo the place I belong\nWest Virginia, mountain mama\nTake me home, country roads",
+    "timesPlayed": 0,
+    "selected": false,
+    "addedOn": null,
+    "addedOnStringFormat": null,
+    "length": null
+  },
+  {
+    "songName": "Wind Beneath My Wings",
+    "artist": "Bette Midler",
+    "lyrics": "So I was the one with all the glory\nWhile you were the one with all the strength\nA beautiful face without a name for so long\nA beautiful smile to hide the pain",
+    "timesPlayed": 0,
+    "selected": false,
+    "addedOn": null,
+    "addedOnStringFormat": null,
+    "length": null
+  },
+  {
+    "songName": "I Want It All",
+    "artist": "Queen",
+    "lyrics": "Gotta find me a future move out of my way\nI want it all, I want it all, I want it all, and I want it now\nI want it all, I want it all, I want it all, and I want it now",
+    "timesPlayed": 0,
+    "selected": false,
+    "addedOn": null,
+    "addedOnStringFormat": null,
+    "length": null
+  }
+]
