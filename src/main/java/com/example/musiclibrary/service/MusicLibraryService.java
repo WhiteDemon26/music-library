@@ -3,6 +3,7 @@ package com.example.musiclibrary.service;
 import com.example.musiclibrary.repository.MusicRepository;
 import com.example.musiclibrary.model.Song;
 import com.example.musiclibrary.model.User;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -28,7 +28,6 @@ public class MusicLibraryService {
     private List<Song> songs = new ArrayList<>();
 
     // static serve a condividere a tutti gli utenti una determinata cosa che devono avere in comune che scelgo io di fargliela vedere e avere
-    public static ArrayList<Song> giftForNewUser = defaultSongs();
 
     // private viene usata solo dentro l'istanza o dentro l'oggetto creato per essere chiamato fuori da questa classe bisogna chiamare il metodo getter
     private Song songPlayingNow;
@@ -45,10 +44,11 @@ public class MusicLibraryService {
     private MusicRepository musicRepository;
 
     @PostConstruct
-    private void postConstruct() {
+    private void postConstruct() throws Exception {
         this.songs = musicRepository.findAll();
         if(this.songs.isEmpty()) {
-            this.songs.addAll(musicRepository.saveAll(defaultSongs()));
+            addSongs(defaultSongs());
+            System.out.println("You got some songs as a gift for downloading the app! Thank you for your support <3!");
         }
     }
 
@@ -190,35 +190,12 @@ public class MusicLibraryService {
 
 
 
-    public static ArrayList<Song> defaultSongs() {
+    public static List<Song> defaultSongs() throws Exception {
 
-        ArrayList<Song> defaultSongs = new ArrayList<>();
-        Song song1 = Song.builder()
-                .songName("Take Me Home, Country Roads")
-                .artist("John Denver")
-                .lyrics("Country roads, take me home\n" +
-                        "To the place I belong\n" +
-                        "West Virginia, mountain mama\n" +
-                        "Take me home, country roads")
-                .build();
-        Song song2 = Song.builder()
-                .songName("Wind Beneath My Wings")
-                .artist("Bette Midler")
-                .lyrics("So I was the one with all the glory\n" +
-                        "While you were the one with all the strength\n" +
-                        "A beautiful face without a name for so long\n" +
-                        "A beautiful smile to hide the pain")
-                .build();
-        Song song3 = Song.builder()
-                .songName("I Want It All")
-                .artist("Queen")
-                .lyrics("Gotta find me a future move out of my way\n" +
-                        "I want it all, I want it all, I want it all, and I want it now\n" +
-                        "I want it all, I want it all, I want it all, and I want it now")
-                .build();
-        defaultSongs.addAll(List.of(song1, song2, song3));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String path = System.getProperty("user.dir") + "\\src\\main\\resources\\default_songs.json";
 
-        return defaultSongs;
+        return objectMapper.readValue(new File(path), new TypeReference<List<Song>>(){});
     }
 
 

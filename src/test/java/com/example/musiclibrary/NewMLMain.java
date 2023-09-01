@@ -190,9 +190,12 @@ public class NewMLMain {
     //  create a json file with all the default songs offered to all users that download the app.
     //  See tor browser to learn how to read a json file from java through Jackson ObjectMapper.
 
-
-    // TODO add a mechanism to load those songs every time the app starts,
+    // add a mechanism to load those songs every time the app starts,
     //  but only if you don't have song records in the DB (that is the very first time you download the app)
+
+    // changes the defaultSongs() method, use the json file you created yesterday to load the default songs
+    //  see tor browser and the notes to see how to work with ObjectMapper
+
 
 
     // TODO: add documentation on all the methods you have created so far in MLService. Use Javadoc (see tor browser)

@@ -41,7 +41,7 @@ public class Review {
         if(this.stars < 3) {
             this.positiveReview = false;
         }
-        if(this.stars <= 5 && this.stars >3) {
+        if(this.stars <= 5 && this.stars > 3) {
             this.positiveReview = true;
         }
     }

@@ -111,6 +111,36 @@ public class MusicLibraryTest {
     }
 
 
+    public static ArrayList<Song> defaultSongs() {
+
+        ArrayList<Song> defaultSongs = new ArrayList<>();
+        Song song1 = Song.builder()
+                .songName("Take Me Home, Country Roads")
+                .artist("John Denver")
+                .lyrics("Country roads, take me home\n" +
+                        "To the place I belong\n" +
+                        "West Virginia, mountain mama\n" +
+                        "Take me home, country roads")
+                .build();
+        Song song2 = Song.builder()
+                .songName("Wind Beneath My Wings")
+                .artist("Bette Midler")
+                .lyrics("So I was the one with all the glory\n" +
+                        "While you were the one with all the strength\n" +
+                        "A beautiful face without a name for so long\n" +
+                        "A beautiful smile to hide the pain")
+                .build();
+        Song song3 = Song.builder()
+                .songName("I Want It All")
+                .artist("Queen")
+                .lyrics("Gotta find me a future move out of my way\n" +
+                        "I want it all, I want it all, I want it all, and I want it now\n" +
+                        "I want it all, I want it all, I want it all, and I want it now")
+                .build();
+        defaultSongs.addAll(List.of(song1, song2, song3));
+
+        return defaultSongs;
+    }
 
 
 /*
