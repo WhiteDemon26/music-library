@@ -41,6 +41,6 @@ public class ReviewsController {
         Review submittedReview = reviewService.addReview(review);
         String message = "you added a new review (see this response's body) !!";
         System.out.println(message);
-        return new ResponseEntity<>(review, HttpStatus.OK);
+        return new ResponseEntity<>(submittedReview, HttpStatus.OK);
     }
 }

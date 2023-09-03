@@ -200,16 +200,12 @@ public class MusicLibraryService {
 
 
 
-
-
-
-    public String selectSongs(Integer[] ids) {
+    public String selectSongs(Integer[] indices) {
         // select is used to select and then to eliminate or share the song or songs
         String message;
 
-        for(Integer indexSong : ids) {
+        for(Integer indexSong : indices) {
             Song song = this.songs.get(indexSong);
-
             // if the song is not selected
             if (!song.isSelected()) {
                 song.setSelected(true);
@@ -220,24 +216,16 @@ public class MusicLibraryService {
                 this.numberOfSelectedSongs--;
             }
         }
-
         if(this.numberOfSelectedSongs > 0) {
             message = this.numberOfSelectedSongs + " / " + this.songs.size();
         } else {
             message = "";
         }
+
         return message;
     }
 
 
-    public Song addSong(Song newSong) {
-        newSong.setAddedOn(LocalDateTime.now());
-        newSong.setAddedOnStringFormat(LocalDateTime.now().format(CUSTOM_FORMATTER));
-        this.musicRepository.save(newSong);
-        String message = "you added new song (see this response's body) !!";
-        System.out.println(message);
-        return newSong;
-    }
 
     public List<Song> addSongs(List<Song> newSongs) {
 
@@ -251,11 +239,14 @@ public class MusicLibraryService {
 
         String message = "you added new songs (see this response's body) !!";
         System.out.println(message);
+
         return newSongs;
     }
 
 
+
     public List<Song> deleteSongs() {
+
         ArrayList<Song> songsCopy = new ArrayList<>(this.songs);
 
         Scanner scan = new Scanner(System.in);
@@ -271,26 +262,34 @@ public class MusicLibraryService {
                 }
             }
         }
+
         return songs;
     }
 
 
     private void play(Song song) throws InterruptedException {
+
         this.isPlayingSongPaused = false;
+
         song.setTimesPlayed(song.getTimesPlayed() + 1);
         System.out.println("the app is playing the song: " + song.getSongName());
+
         // integrate sleep to simulate the length of the song (just for testing, use only minutes as seconds)
+        // TODO: to remove
         int minutes = song.getLength().getMinutes();
         int fakeSeconds = minutes * 1000;
         sleep(fakeSeconds);
+
         System.out.println("Song ended! ");
     }
+
 
 
     public void pauseSong() {
         this.isPlayingSongPaused = true;
         System.out.println("the playing song is paused now");
     }
+
 
 
     public ArrayList<Song> searchSongByTitle(String partOfTitle) {
@@ -305,8 +304,10 @@ public class MusicLibraryService {
                 returnMusic.add(song);
             }
         }
+
         return returnMusic;
     }
+
 
 
     public List<Song> searchSongByArtist(String partOfArtistName) {

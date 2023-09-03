@@ -196,6 +196,8 @@ public class NewMLMain {
     // changes the defaultSongs() method, use the json file you created yesterday to load the default songs
     //  see tor browser and the notes to see how to work with ObjectMapper
 
+    // add 'create your profile' and 'see my profile' complete functionalities: controller, service, repository, entity and DB table.
+    //  start with the User class you already defined.
 
 
     // TODO: add documentation on all the methods you have created so far in MLService. Use Javadoc (see tor browser)
@@ -203,10 +205,11 @@ public class NewMLMain {
     //  with explanations about what they are and how they are used (this is for interviews)
 
 
+    // remove the throws clause from postConstruct() in MLService, handle the exception internally in defaultSongs()
+
 
     // create methods testing all the methods in ML (verify that the ones in MusicLibraryTest work and add others)
 
-    //
 
     // check that all the methods that execute a song increase the timesPlayed index and make sure this variable cannot be set
     // neither at construction time nor via setter.

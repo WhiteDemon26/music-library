@@ -186,7 +186,8 @@ public class MusicLibraryTest {
     //01/02/2023
 
 
-    // test: in the while loop simulate the user selecting a song through a random number between 0 and N
+    // test: in the while loop simulate the user selecting a song through
+    // a random number between 0 and N
     // suppose that number to be the index of the selected song
     // select the song and print the messages
 

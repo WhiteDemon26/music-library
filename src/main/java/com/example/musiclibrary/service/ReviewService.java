@@ -47,13 +47,16 @@ public class ReviewService {
 
 
     public List<Review> readReviews() {
+
         List<Review> reviews = reviewRepository.findAll();
         System.out.println("Those are all reviews: " + reviews);
+
         return reviews;
     }
 
 
     private String calculateStarsAverage() {
+
         float average;
         int sum = 0;
         List<Review> reviews = reviewRepository.findAll();
@@ -65,6 +68,7 @@ public class ReviewService {
         average = sum / howManyReviews;
         System.out.println("the average value is: " + average);
         reviewAverage = DecimalFormat.format(average);
+
         return DecimalFormat.format(average);
     }
 }

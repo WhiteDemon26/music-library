@@ -24,7 +24,7 @@ public class Song implements Comparable<Song> {
     @Column(nullable = false, length = 100, name = "song_name")
     private String songName;
 
-    @Column(nullable = false, length = 100, name = "times_played")
+    @Column(length = 100, name = "times_played")
     private int timesPlayed = 0;
 
     @Column(nullable = false, length = 100, name = "added_on")
@@ -33,7 +33,7 @@ public class Song implements Comparable<Song> {
     @Column(nullable = false, length = 100, name = "added_on_string_format")
     private String addedOnStringFormat;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String artist;
 
     @Column(length = 100)
