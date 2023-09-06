@@ -199,13 +199,21 @@ public class NewMLMain {
     // add 'create your profile' and 'see my profile' complete functionalities: controller, service, repository, entity and DB table.
     //  start with the User class you already defined.
 
+    // remove the throws clause from postConstruct() in MLService, handle the exception internally in defaultSongs()
+
+    // add 'registration date & time', 'address' and 'oldPasswords' fields to User.
+
+
+    // TODO: complete the 'update my profile' functionality.
+
 
     // TODO: add documentation on all the methods you have created so far in MLService. Use Javadoc (see tor browser)
     //  add what the methods do and write down in a separate file all the classes and tools used to create them
     //  with explanations about what they are and how they are used (this is for interviews)
 
 
-    // remove the throws clause from postConstruct() in MLService, handle the exception internally in defaultSongs()
+    // add a myProfile variable in UsersService to have a copy of your data available locally without having to query theDB every time.
+    // add suitable functionalities to keep it updated.
 
 
     // create methods testing all the methods in ML (verify that the ones in MusicLibraryTest work and add others)

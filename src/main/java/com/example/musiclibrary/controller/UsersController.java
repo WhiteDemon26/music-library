@@ -31,8 +31,16 @@ public class UsersController {
     @PostMapping("/add_user")
     public ResponseEntity<User> addUser(@RequestBody User user) {
         User submittedUser = userService.addUser(user);
-        String message = "You added your user on DB (see this response's body) !!";
+        String message = "You added your user on the DB (see this response's body) !!";
         System.out.println(message);
         return new ResponseEntity<>(submittedUser, HttpStatus.OK);
+    }
+
+    @PostMapping("/update_my_profile")
+    public ResponseEntity<User> updateProfile(@RequestBody User user) {
+        User reSubmittedUser = userService.updateUserProfile(user);
+        String message = "You updated your profile on the DB (see this response's body) !!";
+        System.out.println(message);
+        return new ResponseEntity<>(reSubmittedUser, HttpStatus.OK);
     }
 }

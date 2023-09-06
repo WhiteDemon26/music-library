@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "com.example.demo.raz.music_library.User")
 @Table(name = "user")
@@ -34,4 +36,13 @@ public class User {
 
     @Column(length = 100)
     private Integer age;
+
+    @Column(length = 100)
+    private String address;
+
+    @Column(length = 100, nullable = false, name = "old_password")
+    private String oldPassword;
+
+    @Column(nullable = false)
+    private LocalDateTime registration;
 }

@@ -44,7 +44,7 @@ public class MusicLibraryService {
     private MusicRepository musicRepository;
 
     @PostConstruct
-    private void postConstruct() throws Exception {
+    private void postConstruct() {
         this.songs = musicRepository.findAll();
         if(this.songs.isEmpty()) {
             addSongs(defaultSongs());
@@ -190,12 +190,16 @@ public class MusicLibraryService {
 
 
 
-    public static List<Song> defaultSongs() throws Exception {
+    public static List<Song> defaultSongs() {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String path = System.getProperty("user.dir") + "\\src\\main\\resources\\default_songs.json";
-
-        return objectMapper.readValue(new File(path), new TypeReference<List<Song>>(){});
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String path = System.getProperty("user.dir") + "\\src\\main\\resources\\default_songs.json";
+            return objectMapper.readValue(new File(path), new TypeReference<List<Song>>(){});
+        } catch (Exception e) {
+            System.out.println("Something went wrong.");
+            return Collections.emptyList();
+        }
     }
 
 

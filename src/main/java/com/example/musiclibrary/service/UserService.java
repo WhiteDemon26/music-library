@@ -26,7 +26,16 @@ public class UserService {
 
     public List<User> findUsers() {
         List<User> users = userRepository.findAll();
-        System.out.println("Those are all reviews: " + users);
+        System.out.println("Those are all the users: " + users);
         return users;
+    }
+
+
+    public User updateUserProfile(User user) {
+
+        user.setPassword(user.getOldPassword());
+
+        System.out.println("You changed your profile, congratulations! ");
+        return user;
     }
 }
