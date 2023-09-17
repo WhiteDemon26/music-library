@@ -29,7 +29,7 @@ public class ReviewService {
     }
 
 
-    public Review addReview(Review review) throws Exception {
+    public Review addReview(Review review) {
         if( review.getStars() > 0 && review.getStars() < 6 ) {
             review.thumbUpOrThumbDown();
             review.setSubmittedOn(LocalDateTime.now());
