@@ -296,19 +296,22 @@ public class MusicLibraryService {
 
 
 
-    public ArrayList<Song> searchSongByTitle(String partOfTitle) {
+    public List<Song> searchSongByTitle(String searchOnDB, String partOfTitle) {
 
-        ArrayList<Song> returnMusic = new ArrayList<>();
+        List<Song> returnMusic = new ArrayList<>();
 
-        for(Song song : this.songs) {
-            String title = song.getSongName();
-            // first way: use StringUtils.containsIgnoreCase(title, track)
-            // second way: turn both the strings to upper case
-            if(title.toUpperCase().contains(partOfTitle.toUpperCase())) {
-                returnMusic.add(song);
+        if(searchOnDB != null) {
+            return this.musicRepository.findBySongNameContaining(partOfTitle);
+        } else {
+            for (Song song : this.songs) {
+                String title = song.getSongName();
+                // first way: use StringUtils.containsIgnoreCase(title, track)
+                // second way: turn both the strings to upper case
+                if (title.toUpperCase().contains(partOfTitle.toUpperCase())) {
+                    returnMusic.add(song);
+                }
             }
         }
-
         return returnMusic;
     }
 

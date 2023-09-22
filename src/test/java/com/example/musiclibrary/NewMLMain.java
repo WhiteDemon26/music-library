@@ -203,24 +203,46 @@ public class NewMLMain {
 
     // add 'registration date & time', 'address' and 'oldPasswords' fields to User.
 
+    // complete the 'update my profile' functionality.
 
-    // TODO: complete the 'update my profile' functionality.
+    // add functionalities to search for songs by title n the DB repository, not locally.
+    //  This is to check if a song you have in the local memory of your app is among the downloaded ones in the DB too.
+    //  hint: use the same methods you have, but add a parameter from the url after ?
+    //  if that parameter is not null, get the records from the DB, otherwise from local memory
 
 
-    // TODO: add documentation on all the methods you have created so far in MLService. Use Javadoc (see tor browser)
+
+    // TODO: remove bug previous functionality, allow searches on the DB by only parts of titles
+    //  hint: before calling the DB, find the whole title of the song from the string parameter coming from the controller
+
+
+
+    // TODO: add functionalities to search for artist and lyrics etc. in the DB repository, not locally.
+    //  This is to check if a song you have in the local memory of your app is among the downloaded ones in the DB too.
+    //  hint: follow the same pattern you used for the 'search by name' functionality above
+
+
+
+    // TODO: add a myProfile variable in UsersService to have a copy of your data available locally without having to query the DB every time.
+    //  Add suitable functionalities to keep it updated and in sync with the DB.
+
+
+
+    // check that all the methods that execute a song increase the timesPlayed index and make sure this variable cannot be set
+    // neither at construction time nor via setter.
+    // hint: don't use Lombok, use only constructors!
+
+
+    //  add documentation on all the methods you have created so far in MLService. Use Javadoc (see tor browser)
     //  add what the methods do and write down in a separate file all the classes and tools used to create them
     //  with explanations about what they are and how they are used (this is for interviews)
 
-
-    // add a myProfile variable in UsersService to have a copy of your data available locally without having to query theDB every time.
-    // add suitable functionalities to keep it updated.
 
 
     // create methods testing all the methods in ML (verify that the ones in MusicLibraryTest work and add others)
 
 
-    // check that all the methods that execute a song increase the timesPlayed index and make sure this variable cannot be set
-    // neither at construction time nor via setter.
+
 
 
     public void newMain() throws InterruptedException {

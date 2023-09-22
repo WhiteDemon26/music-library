@@ -31,21 +31,21 @@ public class SongsController {
     }
 
 
-    @PostMapping("/find_songs_by_title/{songTitle}")
-    public ResponseEntity<Song> findSongsByTitle(@PathVariable String songTitle) {
-        Song songsFound = musicLibraryService.searchSongByTitle(songTitle).get(0);
+    @GetMapping("/find_songs_by_title/{songTitle}")
+    public ResponseEntity<Song> findSongsByTitle(@RequestParam String searchOnDB, @PathVariable String songTitle) {
+        Song songsFound = musicLibraryService.searchSongByTitle(searchOnDB, songTitle).get(0);
         return new ResponseEntity<>(songsFound, HttpStatus.OK);
     }
 
 
-    @PostMapping("/find_songs_by_artist_name/{songArtistName}")
+    @GetMapping("/find_songs_by_artist_name/{songArtistName}")
     public ResponseEntity<List<Song>> findSongsByArtist(@PathVariable String songArtistName) {
         List<Song> songsFound = musicLibraryService.searchSongByArtist(songArtistName);
         return new ResponseEntity<>(songsFound, HttpStatus.OK);
     }
 
 
-    @PostMapping("/find_songs_lyrics/{songLyrics}")
+    @GetMapping("/find_songs_lyrics/{songLyrics}")
     public ResponseEntity<List<Song>> findSongsByLyrics(@PathVariable String songLyrics) {
         List<Song> songsFound = musicLibraryService.searchSongByLyrics(songLyrics);
         return new ResponseEntity<>(songsFound, HttpStatus.OK);

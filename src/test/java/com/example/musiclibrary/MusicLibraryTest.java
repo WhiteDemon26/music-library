@@ -30,7 +30,7 @@ public class MusicLibraryTest {
 
     public void checkIncreaseTimesPlayed() throws InterruptedException {
 
-        ArrayList<Song> fakeSongs = new ArrayList<>();
+        List<Song> fakeSongs = new ArrayList<>();
         fakeSongs.addAll((returnFakeSongs()));
         MusicLibraryService musicLibraryService = new MusicLibraryService();
         musicLibraryService.setSongs(fakeSongs);
@@ -39,7 +39,7 @@ public class MusicLibraryTest {
         System.out.println("select an title to listen: ");
         String title = modulo.nextLine();
 
-        fakeSongs = musicLibraryService.searchSongByTitle(title);
+        fakeSongs = musicLibraryService.searchSongByTitle(null, title);
         Song firstSelectedSong = fakeSongs.get(0);
 
         musicLibraryService.playSong(firstSelectedSong);
