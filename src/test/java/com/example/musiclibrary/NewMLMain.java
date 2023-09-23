@@ -210,14 +210,10 @@ public class NewMLMain {
     //  hint: use the same methods you have, but add a parameter from the url after ?
     //  if that parameter is not null, get the records from the DB, otherwise from local memory
 
-
-
-    // TODO: remove bug previous functionality, allow searches on the DB by only parts of titles
+    // remove bug previous functionality, allow searches on the DB by only parts of titles
     //  hint: before calling the DB, find the whole title of the song from the string parameter coming from the controller
 
-
-
-    // TODO: add functionalities to search for artist and lyrics etc. in the DB repository, not locally.
+    // add functionalities to search for artist and lyrics etc. in the DB repository, not locally.
     //  This is to check if a song you have in the local memory of your app is among the downloaded ones in the DB too.
     //  hint: follow the same pattern you used for the 'search by name' functionality above
 
@@ -225,6 +221,7 @@ public class NewMLMain {
 
     // TODO: add a myProfile variable in UsersService to have a copy of your data available locally without having to query the DB every time.
     //  Add suitable functionalities to keep it updated and in sync with the DB.
+    //  hint:
 
 
 

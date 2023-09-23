@@ -317,30 +317,38 @@ public class MusicLibraryService {
 
 
 
-    public List<Song> searchSongByArtist(String partOfArtistName) {
+    public List<Song> searchSongByArtist(String searchOnDB, String partOfArtistName) {
 
         List<Song> returnMusic = new ArrayList<>();
 
-        for(Song song : this.songs) {
-            String artist = song.getArtist();
-            if(artist.toUpperCase().contains(partOfArtistName.toUpperCase())) {
-                returnMusic.add(song);
+        if(searchOnDB != null) {
+            return this.musicRepository.findByArtistContaining(partOfArtistName);
+        } else {
+            for (Song song : this.songs) {
+                String artist = song.getArtist();
+                if (artist.toUpperCase().contains(partOfArtistName.toUpperCase())) {
+                    returnMusic.add(song);
+                }
             }
         }
         return returnMusic;
     }
 
 
-    public List<Song> searchSongByLyrics(String partOfLyrics) {
+    public List<Song> searchSongByLyrics(String searchOnDB, String partOfLyrics) {
 
         List<Song> returnMusic = new ArrayList<>();
 
-        for(Song song : this.songs) {
-            String lyrics = song.getLyrics();
-            if(lyrics.toUpperCase().contains(partOfLyrics.toUpperCase())) {
-                returnMusic.add(song);
+            if(searchOnDB != null) {
+                return this.musicRepository.findByLyricsContaining(partOfLyrics);
+            } else {
+                for (Song song : this.songs) {
+                    String lyrics = song.getLyrics();
+                    if (lyrics.toUpperCase().contains(partOfLyrics.toUpperCase())) {
+                        returnMusic.add(song);
+                    }
+                }
             }
-        }
         return returnMusic;
     }
 

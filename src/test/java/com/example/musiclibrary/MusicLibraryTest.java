@@ -72,7 +72,7 @@ public class MusicLibraryTest {
             System.out.println("select an artist to listen: ");
             String artist = modulo.nextLine();
 
-            returnMusic = musicLibraryService.searchSongByArtist(artist);
+            returnMusic = musicLibraryService.searchSongByArtist(null, artist);
             System.out.println(returnMusic.stream().map(song -> song.getSongName()).collect(Collectors.toList()));
         }
     }
