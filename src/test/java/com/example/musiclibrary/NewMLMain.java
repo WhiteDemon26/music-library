@@ -217,12 +217,24 @@ public class NewMLMain {
     //  This is to check if a song you have in the local memory of your app is among the downloaded ones in the DB too.
     //  hint: follow the same pattern you used for the 'search by name' functionality above
 
-
-
-    // TODO: add a myProfile variable in UsersService to have a copy of your data available locally without having to query the DB every time.
+    // add a myProfile variable in UsersService to have a copy of your data available locally without having to query the DB every time.
     //  Add suitable functionalities to keep it updated and in sync with the DB.
-    //  hint:
+    //  hint: you should be able to change your first and last name, username, password, and address locally, then send these info to the DB
 
+    // when the app starts up, your user profile info must be retrieved from the DB
+
+    // when you change the password, you must check that the new one is different than the last one (if there's an old one)
+
+    // add an automatic age update functionality: add a birthdate and make sure that when the app starts up
+    //  the local and remote value of the age field is updated
+
+
+
+    // TODO: improve the age update functionality: set the new age ONLY when necessary and, in case it is, change the record on the db too
+
+
+
+    // edit the add new user funct, ithe old password field must be empty at the beginning, then
 
 
     // check that all the methods that execute a song increase the timesPlayed index and make sure this variable cannot be set

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class User {
 
     @Column(length = 100)
     private Integer age;
+
+    @Column(nullable = false)
+    private LocalDate birthdate;
 
     @Column(length = 100)
     private String address;

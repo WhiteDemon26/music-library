@@ -6,6 +6,10 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.List;
 
 
@@ -13,9 +17,18 @@ import java.util.List;
 @Service
 public class UserService {
 
+    private User myProfile;
+
     @Autowired
     private UserRepository userRepository;
 
+    @PostConstruct
+    private void postConstruct() {
+        User oldProfile = userRepository.findById(1L).get();
+        LocalDate today = LocalDate.now();
+        oldProfile.setAge(Period.between(oldProfile.getBirthdate(), today).getYears());
+        this.myProfile = oldProfile;
+    }
 
     public User addUser(User user) {
         user = userRepository.save(user);
@@ -33,9 +46,25 @@ public class UserService {
 
     public User updateUserProfile(User user) {
 
-        user.setPassword(user.getOldPassword());
+        if(user.getFirstName() != null) {
+            myProfile.setFirstName(user.getFirstName());
+        }
+        if(user.getLastName() != null) {
+            myProfile.setLastName(user.getLastName());
+        }
+        if(user.getUserName() != null) {
+            myProfile.setUserName(user.getUserName());
+        }
+        if(user.getPassword() != null & user.getPassword() != user.getOldPassword()) {
+            myProfile.setPassword(user.getOldPassword());
+        }
+        if(user.getAddress() != null) {
+            myProfile.setAddress(user.getAddress());
+        }
 
-        System.out.println("You changed your profile, congratulations! ");
+        user = userRepository.save(user);
+
+        System.out.println("You changed your profile! ");
         return user;
     }
 }
