@@ -5,10 +5,7 @@ import com.example.musiclibrary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,10 +33,10 @@ public class UsersController {
         return new ResponseEntity<>(submittedUser, HttpStatus.OK);
     }
 
-    @PostMapping("/update_my_profile")
+    @PutMapping("/update_my_profile")
     public ResponseEntity<User> updateProfile(@RequestBody User user) {
         User reSubmittedUser = userService.updateUserProfile(user);
-        String message = "You updated your profile on the DB (see this response's body) !!";
+        String message = "You updated a profile on the DB (see this response's body) !!";
         System.out.println(message);
         return new ResponseEntity<>(reSubmittedUser, HttpStatus.OK);
     }

@@ -228,13 +228,19 @@ public class NewMLMain {
     // add an automatic age update functionality: add a birthdate and make sure that when the app starts up
     //  the local and remote value of the age field is updated
 
+    // improve the age update functionality: set the new age ONLY when necessary and, in case it is, change the record on the db too
+
+    // include specific rules for the password: only if the password meets these requirements the user can register
 
 
-    // TODO: improve the age update functionality: set the new age ONLY when necessary and, in case it is, change the record on the db too
+
+    // TODO: when a user changes password and it's a valid password, put the current password in the field 'oldPassword'
+    //  (continue the code in updateUserProfile() )
 
 
 
     // edit the add new user funct, ithe old password field must be empty at the beginning, then
+    // edit the birthdate field in User: once set, it shouldn't be possible to change it
 
 
     // check that all the methods that execute a song increase the timesPlayed index and make sure this variable cannot be set

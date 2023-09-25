@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 
-
 @Data
 @Service
 public class UserService {
@@ -26,13 +25,22 @@ public class UserService {
     private void postConstruct() {
         User oldProfile = userRepository.findById(1L).get();
         LocalDate today = LocalDate.now();
-        oldProfile.setAge(Period.between(oldProfile.getBirthdate(), today).getYears());
+        int updatedAge = (Period.between(oldProfile.getBirthdate(), today).getYears());
+        if(updatedAge > oldProfile.getAge()) {
+            oldProfile.setAge(updatedAge);
+            userRepository.save(oldProfile);
+        }
         this.myProfile = oldProfile;
     }
 
     public User addUser(User user) {
-        user = userRepository.save(user);
-        System.out.println("You have completed your profile, congratulations! ");
+        if(!checkValidityOfPassword(user)) {
+            System.out.println("The user cannot be registered :( !");
+        } else {
+            user.setRegistration(LocalDateTime.now());
+            user = userRepository.save(user);
+            System.out.println("The user has been correctly registered !");
+        }
         return user;
     }
 
@@ -41,6 +49,27 @@ public class UserService {
         List<User> users = userRepository.findAll();
         System.out.println("Those are all the users: " + users);
         return users;
+    }
+
+
+    private boolean checkValidityOfPassword(User user) {
+
+        String password = user.getPassword();
+
+        boolean hasSpecialCharacters = password.contains("!") || password.contains("£") || password.contains("$") || password.contains("%");
+        boolean containsName = password.contains(user.getFirstName());
+        boolean passwordValid = hasSpecialCharacters && !containsName && password.length() >= 8;
+
+        if (containsName) {
+            System.out.println("la tua password non deve contenere il tuo nome");
+        }
+        if (!hasSpecialCharacters) {
+            System.out.println("la tua password deve contenere almeno un carattere speciale");
+        }
+        if (password.length() < 8) {
+            System.out.println("la tua password deve avere almeno 8 cifre");
+        }
+        return passwordValid;
     }
 
 
@@ -56,13 +85,19 @@ public class UserService {
             myProfile.setUserName(user.getUserName());
         }
         if(user.getPassword() != null & user.getPassword() != user.getOldPassword()) {
-            myProfile.setPassword(user.getOldPassword());
+            if(checkValidityOfPassword(user)) {
+                myProfile.setOldPassword(myProfile.getPassword());
+                myProfile.setPassword(user.getPassword());
+                System.out.println("You change your password good job ;)");
+            } else {
+                System.out.println("You failed to change your password! ");
+            }
         }
         if(user.getAddress() != null) {
             myProfile.setAddress(user.getAddress());
         }
 
-        user = userRepository.save(user);
+        user = userRepository.save(myProfile);
 
         System.out.println("You changed your profile! ");
         return user;
