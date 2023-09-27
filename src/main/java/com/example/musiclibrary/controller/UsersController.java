@@ -19,8 +19,6 @@ public class UsersController {
 
     @GetMapping("/show_users")
     public ResponseEntity<List<User>> showUsers() {
-        String message = "you asked to see the all Users (see this response's body) !!";
-        System.out.println(message);
         return new ResponseEntity<>(userService.findUsers(), HttpStatus.OK);
     }
 
@@ -28,16 +26,12 @@ public class UsersController {
     @PostMapping("/add_user")
     public ResponseEntity<User> addUser(@RequestBody User user) {
         User submittedUser = userService.addUser(user);
-        String message = "You added your user on the DB (see this response's body) !!";
-        System.out.println(message);
         return new ResponseEntity<>(submittedUser, HttpStatus.OK);
     }
 
     @PutMapping("/update_my_profile")
     public ResponseEntity<User> updateProfile(@RequestBody User user) {
         User reSubmittedUser = userService.updateUserProfile(user);
-        String message = "You updated a profile on the DB (see this response's body) !!";
-        System.out.println(message);
         return new ResponseEntity<>(reSubmittedUser, HttpStatus.OK);
     }
 }

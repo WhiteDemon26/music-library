@@ -30,45 +30,62 @@ public class ReviewService {
 
 
     public Review addReview(Review review) {
-        if( review.getStars() > 0 && review.getStars() < 6 ) {
-            review.thumbUpOrThumbDown();
-            review.setSubmittedOn(LocalDateTime.now());
-            review.setSubmittedOnStringFormat(LocalDateTime.now().format(CUSTOM_FORMATTER));
 
-            reviewRepository.save(review);
+        review.getStars();
 
-            calculateStarsAverage();
-            return review;
-        } else {
-            System.out.println("you must put a star between 1 and 5, thanks");
-            throw new IllegalArgumentException("invalid number of stars for your review, moron!!");
+        try {
+            if (review.getStars() > 0 && review.getStars() < 6) {
+                review.thumbUpOrThumbDown();
+                review.setSubmittedOn(LocalDateTime.now());
+                review.setSubmittedOnStringFormat(LocalDateTime.now().format(CUSTOM_FORMATTER));
+                reviewRepository.save(review);
+                calculateStarsAverage();
+
+                String message = "You added a new review (see this response's body) !!";
+                System.out.println(message);
+                return review;
+            } else {
+                System.out.println("you must put a star between 1 and 5, thanks");
+                throw new IllegalArgumentException("invalid number of stars for your review, moron!!");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred while asking to add a new review !!");
+            return null;
         }
     }
 
 
     public List<Review> readReviews() {
-
-        List<Review> reviews = reviewRepository.findAll();
-        System.out.println("Those are all reviews: " + reviews);
-
-        return reviews;
+        try {
+            List<Review> reviews = reviewRepository.findAll();
+            System.out.println("Those are all reviews: " + reviews);
+            return reviews;
+        } catch (Exception e) {
+            System.out.println("An error occurred while asking to see all the reviews !!");
+            return null;
+        }
     }
 
 
     private String calculateStarsAverage() {
+        try {
+            float average;
+            int sum = 0;
+            List<Review> reviews = reviewRepository.findAll();
+            float howManyReviews = reviews.size();
 
-        float average;
-        int sum = 0;
-        List<Review> reviews = reviewRepository.findAll();
-        float howManyReviews = reviews.size();
+            for (Review review : reviews) {
+                sum = sum + review.getStars();
+            }
+            average = sum / howManyReviews;
+            System.out.println("the average value is: " + average);
+            reviewAverage = DecimalFormat.format(average);
+            return DecimalFormat.format(average);
 
-        for(Review review : reviews) {
-            sum = sum + review.getStars();
+        } catch (Exception e) {
+            String message = "An error occurred while asking to see the star average of all reviews.";
+            System.out.println(message);
+            return null;
         }
-        average = sum / howManyReviews;
-        System.out.println("the average value is: " + average);
-        reviewAverage = DecimalFormat.format(average);
-
-        return DecimalFormat.format(average);
     }
 }

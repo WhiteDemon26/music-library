@@ -232,10 +232,23 @@ public class NewMLMain {
 
     // include specific rules for the password: only if the password meets these requirements the user can register
 
-
-
-    // TODO: when a user changes password and it's a valid password, put the current password in the field 'oldPassword'
+    // when a user changes password and it's a valid password, put the current password in the field 'oldPassword'
     //  (continue the code in updateUserProfile() )
+
+    // improve logging messages in services, use only one println message instead of two.
+    //  hint: review the grammar of the messages and use the same model Alessandro used.
+
+
+
+    // TODO: push the code with a both grammatically correct and explicative enough message (Alessandro should review it before pushing).
+
+
+    // TODO: changes the error log messages, include information about the thrown exception.
+    //  hint: explore the inner structure of the e object.
+
+
+    // TODO: add new functionality: the User class must include information about the songs that user downloaded and has locally in storage.
+
 
 
 
@@ -255,7 +268,6 @@ public class NewMLMain {
 
 
     // create methods testing all the methods in ML (verify that the ones in MusicLibraryTest work and add others)
-
 
 
 

@@ -22,16 +22,12 @@ public class ReviewsController {
 
     @GetMapping("/show_reviews")
     public ResponseEntity<List<Review>> showReviews() {
-        String message = "you asked to see the reviews (see this response's body) !!";
-        System.out.println(message);
         return new ResponseEntity<>(reviewService.readReviews(), HttpStatus.OK);
     }
 
 
     @GetMapping("/show_reviews_average")
     public ResponseEntity<String> calculateAverageReviews() {
-        String message = "you asked to see the star average of all reviews!!";
-        System.out.println(message);
         return new ResponseEntity<>(reviewService.getReviewAverage(), HttpStatus.OK);
     }
 
@@ -39,8 +35,6 @@ public class ReviewsController {
     @PostMapping("/add_review")
     public ResponseEntity<Review> addReview(@RequestBody Review review) throws Exception {
         Review submittedReview = reviewService.addReview(review);
-        String message = "you added a new review (see this response's body) !!";
-        System.out.println(message);
         return new ResponseEntity<>(submittedReview, HttpStatus.OK);
     }
 }

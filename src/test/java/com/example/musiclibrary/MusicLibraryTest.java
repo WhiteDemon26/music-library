@@ -20,7 +20,7 @@ public class MusicLibraryTest {
 
     public void getTimesPlayedSong() {
         MusicLibraryService musicLibraryService = new MusicLibraryService();
-        ArrayList<Song> returnMusic = musicLibraryService.mostPlayed();
+        ArrayList<Song> returnMusic = musicLibraryService.findMostPlayedSongs();
         for (Song song : returnMusic) {
             System.out.println(song.getSongName() + "has been played " + song.getTimesPlayed() + " times");
         }

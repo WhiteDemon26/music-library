@@ -34,21 +34,70 @@ public class UserService {
     }
 
     public User addUser(User user) {
-        if(!checkValidityOfPassword(user)) {
-            System.out.println("The user cannot be registered :( !");
-        } else {
+        try {
+            if (!checkValidityOfPassword(user)) {
+                System.out.println("An error occurred, the user cannot be registered :( !");
+                return null;
+            }
             user.setRegistration(LocalDateTime.now());
             user = userRepository.save(user);
-            System.out.println("The user has been correctly registered !");
+            System.out.println("The user has been correctly registered (see this response's body) !!");
+            return user;
+        } catch (Exception e) {
+            System.out.println("An error occurred while asking to add a user !!");
+            return null;
         }
-        return user;
     }
 
 
     public List<User> findUsers() {
-        List<User> users = userRepository.findAll();
-        System.out.println("Those are all the users: " + users);
-        return users;
+        try {
+            List<User> users = userRepository.findAll();
+            String message = "You asked to see all the users (see this response's body) !!";
+            System.out.println(message);
+            return users;
+        } catch (Exception e) {
+            String message = "An error occurred while asking to see all the Users.";
+            System.out.println(message);
+            return null;
+        }
+    }
+
+
+    public User updateUserProfile(User user) {
+
+        try {
+            if (user.getFirstName() != null) {
+                myProfile.setFirstName(user.getFirstName());
+            }
+            if (user.getLastName() != null) {
+                myProfile.setLastName(user.getLastName());
+            }
+            if (user.getUserName() != null) {
+                myProfile.setUserName(user.getUserName());
+            }
+            if (user.getPassword() != null & user.getPassword() != user.getOldPassword()) {
+                if (checkValidityOfPassword(user)) {
+                    myProfile.setOldPassword(myProfile.getPassword());
+                    myProfile.setPassword(user.getPassword());
+                    System.out.println("You changed your password, good job!)");
+                } else {
+                    System.out.println("You failed to change your password! ");
+                }
+            }
+            if (user.getAddress() != null) {
+                myProfile.setAddress(user.getAddress());
+            }
+
+            user = userRepository.save(myProfile);
+
+            System.out.println("You successfully changed your profile (see this response's body) !!");
+            return user;
+        } catch(Exception e) {
+            String message = "An error occurred, your profile couldn't be updated !!";
+            System.out.println(message);
+            return null;
+        }
     }
 
 
@@ -61,45 +110,14 @@ public class UserService {
         boolean passwordValid = hasSpecialCharacters && !containsName && password.length() >= 8;
 
         if (containsName) {
-            System.out.println("la tua password non deve contenere il tuo nome");
+            System.out.println("Your password must not contain your name");
         }
         if (!hasSpecialCharacters) {
-            System.out.println("la tua password deve contenere almeno un carattere speciale");
+            System.out.println("Your password must contain at least one special character");
         }
         if (password.length() < 8) {
-            System.out.println("la tua password deve avere almeno 8 cifre");
+            System.out.println("Your password must contain at least 8 digits");
         }
         return passwordValid;
-    }
-
-
-    public User updateUserProfile(User user) {
-
-        if(user.getFirstName() != null) {
-            myProfile.setFirstName(user.getFirstName());
-        }
-        if(user.getLastName() != null) {
-            myProfile.setLastName(user.getLastName());
-        }
-        if(user.getUserName() != null) {
-            myProfile.setUserName(user.getUserName());
-        }
-        if(user.getPassword() != null & user.getPassword() != user.getOldPassword()) {
-            if(checkValidityOfPassword(user)) {
-                myProfile.setOldPassword(myProfile.getPassword());
-                myProfile.setPassword(user.getPassword());
-                System.out.println("You change your password good job ;)");
-            } else {
-                System.out.println("You failed to change your password! ");
-            }
-        }
-        if(user.getAddress() != null) {
-            myProfile.setAddress(user.getAddress());
-        }
-
-        user = userRepository.save(myProfile);
-
-        System.out.println("You changed your profile! ");
-        return user;
     }
 }

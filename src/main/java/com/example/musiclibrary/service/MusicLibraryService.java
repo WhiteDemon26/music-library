@@ -183,9 +183,16 @@ public class MusicLibraryService {
 
 
     public List<Song> showDownloadedSongs() {
-        // returns songs with its songs in order, ordered by submittedOn
-        Collections.sort(songs, comparing(Song::getAddedOn).reversed());
-        return songs;
+        try {
+            // returns songs with its songs in order, ordered by submittedOn
+            Collections.sort(songs, comparing(Song::getAddedOn).reversed());
+            String message = "You asked to see the downloaded songs (see this response's body) !!";
+            System.out.println(message);
+            return songs;
+        } catch (Exception e) {
+            System.out.println("An error occurred while asking to see the downloaded songs !!");
+            return null;
+        }
     }
 
 
@@ -197,7 +204,7 @@ public class MusicLibraryService {
             String path = System.getProperty("user.dir") + "\\src\\main\\resources\\default_songs.json";
             return objectMapper.readValue(new File(path), new TypeReference<List<Song>>(){});
         } catch (Exception e) {
-            System.out.println("Something went wrong.");
+            System.out.println("An error occurred while downloading the default songs !!");
             return Collections.emptyList();
         }
     }
@@ -230,44 +237,52 @@ public class MusicLibraryService {
     }
 
 
-
     public List<Song> addSongs(List<Song> newSongs) {
+        try {
 
-        for (Song song : newSongs) {
-            song.setAddedOn(LocalDateTime.now());
-            song.setAddedOnStringFormat(LocalDateTime.now().format(CUSTOM_FORMATTER));
+            for (Song song : newSongs) {
+                song.setAddedOn(LocalDateTime.now());
+                song.setAddedOnStringFormat(LocalDateTime.now().format(CUSTOM_FORMATTER));
+            }
+
+            this.songs.addAll(newSongs);
+            this.musicRepository.saveAll(newSongs);
+
+            String message = "You added new songs (see this response's body) !!";
+            System.out.println(message);
+            return newSongs;
+        } catch (Exception e) {
+            String message = "An error occurred while asking to add new songs !!";
+            System.out.println(message);
+            return null;
         }
-
-        this.songs.addAll(newSongs);
-        this.musicRepository.saveAll(newSongs);
-
-        String message = "you added new songs (see this response's body) !!";
-        System.out.println(message);
-
-        return newSongs;
     }
 
 
 
     public List<Song> deleteSongs() {
 
-        ArrayList<Song> songsCopy = new ArrayList<>(this.songs);
+        try {
+            ArrayList<Song> songsCopy = new ArrayList<>(this.songs);
 
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Do you want to delete the songs even from the DB? ");
-        Boolean deleteDBSongs = scan.nextBoolean();
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Do you want to delete the songs even from the DB? ");
+            Boolean deleteDBSongs = scan.nextBoolean();
 
-        for(Song song : songsCopy) {
-            if(song.isSelected()){
-                this.songs.remove(song);
-                if(deleteDBSongs) {
-                    musicRepository.delete(song);
-                    System.out.println("Your songs are deleted from the DB. ");
+            for (Song song : songsCopy) {
+                if (song.isSelected()) {
+                    this.songs.remove(song);
+                    if (deleteDBSongs) {
+                        musicRepository.delete(song);
+                        System.out.println("Your song " + song.getSongName() +" has been deleted from the DB.");
+                    }
                 }
             }
+            return songs;
+        } catch (Exception e) {
+            System.out.println("An error occurred while asking to delete your songs !!");
+            return null;
         }
-
-        return songs;
     }
 
 
@@ -353,28 +368,33 @@ public class MusicLibraryService {
     }
 
 
-    public ArrayList<Song> mostPlayed() {
+    public ArrayList<Song> findMostPlayedSongs() {
+        try {
+            // ArrayList<Song> songsCopy = (ArrayList<Song>)this.songs.clone();
+            // not valid anymore: songs is a List
+            ArrayList<Song> songsCopy = new ArrayList<Song>(this.songs);
 
-        // ArrayList<Song> songsCopy = (ArrayList<Song>)this.songs.clone();
-        // not valid anymore: songs is a List
-        ArrayList<Song> songsCopy = new ArrayList<Song>(this.songs);
+            // we could remove the songs that have never been listened to through:
+            // songsCopy = new ArrayList<>(mostPlayedSongs.stream().filter(song -> song.timesPlayed != 0).collect(Collectors.toList()));
+            // but java streams are used and you don't know them yet! Use method below
 
-        // we could remove the songs that have never been listened to through:
-        // songsCopy = new ArrayList<>(mostPlayedSongs.stream().filter(song -> song.timesPlayed != 0).collect(Collectors.toList()));
-        // but java streams are used and you don't know them yet! Use method below
-
-        // we copy the arraylist because we can't modify it while looping through it
-        for (Song song : songs) {
-            if (song.getTimesPlayed() == 0) {
-                songsCopy.remove(song);
+            // we copy the arraylist because we can't modify it while looping through it
+            for (Song song : songs) {
+                if (song.getTimesPlayed() == 0) {
+                    songsCopy.remove(song);
+                }
             }
+
+            // let's sort the songs by number of times they have been played ( comparing(etc.) )
+            //Collections.sort(songsCopy, comparing(Song::getTimesPlayed).reversed());
+            Collections.sort(songsCopy);
+            String message = "You asked to see the most played songs !!";
+            System.out.println(message);
+            return songsCopy;
+        } catch (Exception e) {
+            System.out.println("An error occurred while asking to see the most played songs !!");
+            return null;
         }
-
-        // let's sort the songs by number of times they have been played ( comparing(etc.) )
-        //Collections.sort(songsCopy, comparing(Song::getTimesPlayed).reversed());
-        Collections.sort(songsCopy);
-
-        return songsCopy;
     }
 
 
