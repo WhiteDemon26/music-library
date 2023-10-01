@@ -34,70 +34,53 @@ public class UserService {
     }
 
     public User addUser(User user) {
-        try {
-            if (!checkValidityOfPassword(user)) {
-                System.out.println("An error occurred, the user cannot be registered :( !");
-                return null;
-            }
-            user.setRegistration(LocalDateTime.now());
-            user = userRepository.save(user);
-            System.out.println("The user has been correctly registered (see this response's body) !!");
-            return user;
-        } catch (Exception e) {
-            System.out.println("An error occurred while asking to add a user !!");
+        if (!checkValidityOfPassword(user)) {
+            System.out.println("An error occurred, the user cannot be registered :( !");
             return null;
         }
+        user.setRegistration(LocalDateTime.now());
+        user = userRepository.save(user);
+        System.out.println("The user has been correctly registered (see this response's body) !!");
+        return user;
     }
 
 
     public List<User> findUsers() {
-        try {
-            List<User> users = userRepository.findAll();
-            String message = "You asked to see all the users (see this response's body) !!";
-            System.out.println(message);
-            return users;
-        } catch (Exception e) {
-            String message = "An error occurred while asking to see all the Users.";
-            System.out.println(message);
-            return null;
-        }
+        List<User> users = userRepository.findAll();
+        String message = "You asked to see all the users (see this response's body) !!";
+        System.out.println(message);
+        return users;
     }
 
 
     public User updateUserProfile(User user) {
 
-        try {
-            if (user.getFirstName() != null) {
-                myProfile.setFirstName(user.getFirstName());
-            }
-            if (user.getLastName() != null) {
-                myProfile.setLastName(user.getLastName());
-            }
-            if (user.getUserName() != null) {
-                myProfile.setUserName(user.getUserName());
-            }
-            if (user.getPassword() != null & user.getPassword() != user.getOldPassword()) {
-                if (checkValidityOfPassword(user)) {
-                    myProfile.setOldPassword(myProfile.getPassword());
-                    myProfile.setPassword(user.getPassword());
-                    System.out.println("You changed your password, good job!)");
-                } else {
-                    System.out.println("You failed to change your password! ");
-                }
-            }
-            if (user.getAddress() != null) {
-                myProfile.setAddress(user.getAddress());
-            }
-
-            user = userRepository.save(myProfile);
-
-            System.out.println("You successfully changed your profile (see this response's body) !!");
-            return user;
-        } catch(Exception e) {
-            String message = "An error occurred, your profile couldn't be updated !!";
-            System.out.println(message);
-            return null;
+        if (user.getFirstName() != null) {
+            myProfile.setFirstName(user.getFirstName());
         }
+        if (user.getLastName() != null) {
+            myProfile.setLastName(user.getLastName());
+        }
+        if (user.getUserName() != null) {
+            myProfile.setUserName(user.getUserName());
+        }
+        if (user.getPassword() != null & user.getPassword() != user.getOldPassword()) {
+            if (checkValidityOfPassword(user)) {
+                myProfile.setOldPassword(myProfile.getPassword());
+                myProfile.setPassword(user.getPassword());
+                System.out.println("You changed your password, good job!)");
+            } else {
+                System.out.println("You failed to change your password! ");
+            }
+        }
+        if (user.getAddress() != null) {
+            myProfile.setAddress(user.getAddress());
+        }
+
+        user = userRepository.save(myProfile);
+
+        System.out.println("You successfully changed your profile (see this response's body) !!");
+        return user;
     }
 
 

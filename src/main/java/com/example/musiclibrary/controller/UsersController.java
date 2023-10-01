@@ -19,19 +19,38 @@ public class UsersController {
 
     @GetMapping("/show_users")
     public ResponseEntity<List<User>> showUsers() {
-        return new ResponseEntity<>(userService.findUsers(), HttpStatus.OK);
+        try {
+            List<User> listUsers = userService.findUsers();
+            return new ResponseEntity<>(listUsers, HttpStatus.OK);
+        } catch (Exception e) {
+            String message = "An error occurred while asking to see all the Users. \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            System.out.println(message);
+            return null;
+        }
     }
 
 
     @PostMapping("/add_user")
     public ResponseEntity<User> addUser(@RequestBody User user) {
-        User submittedUser = userService.addUser(user);
-        return new ResponseEntity<>(submittedUser, HttpStatus.OK);
+        try {
+            User submittedUser = userService.addUser(user);
+            return new ResponseEntity<>(submittedUser, HttpStatus.OK);
+        } catch (Exception e) {
+            String message = "An error occurred while asking to add a user !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            System.out.println(message);
+            return null;
+        }
     }
 
     @PutMapping("/update_my_profile")
     public ResponseEntity<User> updateProfile(@RequestBody User user) {
-        User reSubmittedUser = userService.updateUserProfile(user);
-        return new ResponseEntity<>(reSubmittedUser, HttpStatus.OK);
+        try {
+            User reSubmittedUser = userService.updateUserProfile(user);
+            return new ResponseEntity<>(reSubmittedUser, HttpStatus.OK);
+        } catch(Exception e) {
+            String message = "An error occurred, your profile couldn't be updated !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            System.out.println(message);
+            return null;
+        }
     }
 }

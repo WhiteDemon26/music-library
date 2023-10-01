@@ -1,13 +1,12 @@
 package com.example.musiclibrary.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "com.example.demo.raz.music_library.User")
 @Table(name = "user")
@@ -37,7 +36,7 @@ public class User {
     @Column(length = 100)
     private Integer age;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDate birthdate;
 
     @Column(length = 100)
@@ -48,4 +47,11 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime registration;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Review> submittedReviews;
+
 }

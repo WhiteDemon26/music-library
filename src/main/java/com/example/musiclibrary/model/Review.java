@@ -1,9 +1,8 @@
 package com.example.musiclibrary.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -35,6 +34,14 @@ public class Review {
 
     @Column(nullable = false, name = "submitted_on_string_format")
     private String submittedOnStringFormat;
+
+    @EqualsAndHashCode.Exclude
+    //@ToString.Exclude
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    @JsonProperty("user")
+    private User user;
 
 
     public void thumbUpOrThumbDown() {

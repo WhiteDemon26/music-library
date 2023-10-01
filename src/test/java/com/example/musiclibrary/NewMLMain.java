@@ -238,21 +238,26 @@ public class NewMLMain {
     // improve logging messages in services, use only one println message instead of two.
     //  hint: review the grammar of the messages and use the same model Alessandro used.
 
+    // push the code with a both grammatically correct and explicative enough message (Alessandro should review it before pushing).
 
+    // refactor all the services: remove the try / catch blocks and put them in the controllers.
+    //  hint: use showDownloadedSongs() as model for the other controller methods.
 
-    // TODO: push the code with a both grammatically correct and explicative enough message (Alessandro should review it before pushing).
-
-
-    // TODO: changes the error log messages, include information about the thrown exception.
-    //  hint: explore the inner structure of the e object.
-
-
-    // TODO: add new functionality: the User class must include information about the songs that user downloaded and has locally in storage.
+    // add new functionality: the User class must include information about the songs that user downloaded and has locally in storage.
 
 
 
+    // TODO: remove grammatically incorrect log statements and statements that contain objects or list of objects to store in the DB or retrieved from it
 
-    // edit the add new user funct, ithe old password field must be empty at the beginning, then
+
+    // TODO: remove all useless comments around (the ones with "// etc.")
+
+
+    // TODO: add functionality to retrieve a user from the DB through its Id.
+
+
+
+    // edit the add new user functionality: the old password field must be empty at the beginning, then
     // edit the birthdate field in User: once set, it shouldn't be possible to change it
 
 
