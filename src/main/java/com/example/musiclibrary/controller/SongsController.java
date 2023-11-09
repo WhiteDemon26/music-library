@@ -42,7 +42,7 @@ public class SongsController {
 
 
     @GetMapping("/find_songs_by_title/{songTitle}")
-    public ResponseEntity<List<Song>> findSongsByTitle(@RequestParam String searchOnDB, @PathVariable String songTitle) {
+    public ResponseEntity<List<Song>> findSongsByTitle(@RequestParam("search_db") Boolean searchOnDB, @PathVariable String songTitle) {
         try {
             List<Song> songsFound = musicLibraryService.searchSongByTitle(searchOnDB, songTitle);
             return new ResponseEntity<>(songsFound, HttpStatus.OK);
@@ -55,7 +55,7 @@ public class SongsController {
 
 
     @GetMapping("/find_songs_by_artist_name/{songArtistName}")
-    public ResponseEntity<List<Song>> findSongsByArtist(@RequestParam String searchOnDB, @PathVariable String songArtistName) {
+    public ResponseEntity<List<Song>> findSongsByArtist(@RequestParam("search_db") Boolean searchOnDB, @PathVariable String songArtistName) {
         try {
             List<Song> songsFound = musicLibraryService.searchSongByArtist(searchOnDB, songArtistName);
             return new ResponseEntity<>(songsFound, HttpStatus.OK);
@@ -68,7 +68,7 @@ public class SongsController {
 
 
     @GetMapping("/find_songs_lyrics/{songLyrics}")
-    public ResponseEntity<List<Song>> findSongsByLyrics(@RequestParam String searchOnDB, @PathVariable String songLyrics) {
+    public ResponseEntity<List<Song>> findSongsByLyrics(@RequestParam("search_db") Boolean searchOnDB, @PathVariable String songLyrics) {
         try {
             List<Song> songsFound = musicLibraryService.searchSongByLyrics(searchOnDB, songLyrics);
             return new ResponseEntity<>(songsFound, HttpStatus.OK);
@@ -81,7 +81,7 @@ public class SongsController {
 
 
     @PostMapping("/select_songs")
-    public ResponseEntity<String> selectedSongs(@RequestBody Integer[] ids) {
+    public ResponseEntity<String> selectedSongs(@RequestParam("ids") Long[] ids) {
         try {
             String songsSelected = musicLibraryService.selectSongs(ids);
             return new ResponseEntity<>(songsSelected, HttpStatus.OK);
@@ -106,12 +106,46 @@ public class SongsController {
 
 
     @DeleteMapping("/delete_songs")
-    public ResponseEntity<List<Song>> deleteSongs(){
+    public ResponseEntity<List<Song>> deleteSongs(@RequestParam("delete_DB_songs") Boolean deleteDBSongs) {
         try {
-            List<Song> songsDeleted = musicLibraryService.deleteSongs();
+            List<Song> songsDeleted = musicLibraryService.deleteSongs(deleteDBSongs);
         return new ResponseEntity<>(songsDeleted, HttpStatus.OK);
         } catch (Exception e) {
             String message = "An error occurred while asking to delete your songs !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            System.out.println(message);
+            return null;
+        }
+    }
+
+
+    @GetMapping("/play_song/{song_id}")
+    public ResponseEntity<Song> playSong(@PathVariable("song_id") Long id) {
+        try {
+            return new ResponseEntity<>(musicLibraryService.playSongSelectedFromFE(id), HttpStatus.OK);
+        } catch (Exception e) {
+            String message = "An error occurred while asking to play the song !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            System.out.println(message);
+            return null;
+        }
+    }
+
+    @GetMapping("/play_next_song")
+    public ResponseEntity<Song> playNextSong() {
+        try {
+            return new ResponseEntity<>(musicLibraryService.nextSong(), HttpStatus.OK);
+        } catch (Exception e) {
+            String message = "An error occurred while asking to play the next song !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            System.out.println(message);
+            return null;
+        }
+    }
+
+    @GetMapping("/play_previous_song")
+    public ResponseEntity<Song> playPreviousSong() {
+        try {
+            return new ResponseEntity<>(musicLibraryService.previousSong(), HttpStatus.OK);
+        } catch (Exception e) {
+            String message = "An error occurred while asking to play the previous song !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
             System.out.println(message);
             return null;
         }

@@ -5,6 +5,7 @@ import com.example.musiclibrary.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Data
 @Service
+@Transactional
 public class UserService {
 
     private User myProfile;
@@ -23,24 +25,26 @@ public class UserService {
 
     @PostConstruct
     private void postConstruct() {
-        User oldProfile = userRepository.findById(1L).get();
-        LocalDate today = LocalDate.now();
-        int updatedAge = (Period.between(oldProfile.getBirthdate(), today).getYears());
-        if(updatedAge > oldProfile.getAge()) {
-            oldProfile.setAge(updatedAge);
-            userRepository.save(oldProfile);
+        if(userRepository.existsById(1L)) {
+            User oldProfile = userRepository.findById(1L).get();
+            LocalDate today = LocalDate.now();
+            int updatedAge = (Period.between(oldProfile.getBirthdate(), today).getYears());
+            if (updatedAge > oldProfile.getAge()) {
+                oldProfile.setAge(updatedAge);
+                oldProfile = userRepository.save(oldProfile);
+            }
+            this.myProfile = oldProfile;
         }
-        this.myProfile = oldProfile;
     }
+
 
     public User addUser(User user) {
         if (!checkValidityOfPassword(user)) {
-            System.out.println("An error occurred, the user cannot be registered :( !");
             return null;
         }
         user.setRegistration(LocalDateTime.now());
         user = userRepository.save(user);
-        System.out.println("The user has been correctly registered (see this response's body) !!");
+        System.out.println("The user has been correctly registered.");
         return user;
     }
 
@@ -53,7 +57,7 @@ public class UserService {
     }
 
 
-    public User updateUserProfile(User user) {
+    public User updateMyProfile(User user) {
 
         if (user.getFirstName() != null) {
             myProfile.setFirstName(user.getFirstName());
@@ -79,7 +83,7 @@ public class UserService {
 
         user = userRepository.save(myProfile);
 
-        System.out.println("You successfully changed your profile (see this response's body) !!");
+        System.out.println("You successfully changed your profile.");
         return user;
     }
 

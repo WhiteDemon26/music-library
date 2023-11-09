@@ -1,5 +1,6 @@
 package com.example.musiclibrary.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -7,11 +8,15 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "com.example.demo.raz.music_library.User")
 @Table(name = "user")
 @Builder
-@Data
+//@Data
+@Getter
+@Setter
+//@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -53,5 +58,12 @@ public class User {
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Review> submittedReviews;
+
+    //@JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "song_like",
+                joinColumns = @JoinColumn(name = "user_id"),
+                inverseJoinColumns = @JoinColumn(name = "song_id"))
+    private Set<Song> likedSongs;
 
 }

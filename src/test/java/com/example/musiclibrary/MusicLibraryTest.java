@@ -20,7 +20,7 @@ public class MusicLibraryTest {
 
     public void getTimesPlayedSong() {
         MusicLibraryService musicLibraryService = new MusicLibraryService();
-        ArrayList<Song> returnMusic = musicLibraryService.findMostPlayedSongs();
+        List<Song> returnMusic = musicLibraryService.findMostPlayedSongs();
         for (Song song : returnMusic) {
             System.out.println(song.getSongName() + "has been played " + song.getTimesPlayed() + " times");
         }
@@ -99,11 +99,11 @@ public class MusicLibraryTest {
 
         while (true) {
             Random rand = new Random();
-            int index = rand.nextInt(range);
+            Long index = rand.nextLong(range);
             List<Song> songs = musicLibraryService.getSongs();
-            Integer[] numbers = new Integer[]{index};
+            Long[] numbers = new Long[]{index};
             String message = musicLibraryService.selectSongs(numbers);
-            musicLibraryService.deleteSongs();
+            musicLibraryService.deleteSongs(false);
             System.out.println("remaining songs: " + songs.size());
             sleep(3000);
             range--;

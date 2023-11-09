@@ -1,19 +1,24 @@
 package com.example.musiclibrary.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity(name = "com.example.demo.raz.music_library.Song")
 @Table(name = "song")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
+//@Data
+@Getter
+@Setter
+//@EqualsAndHashCode
 public class Song implements Comparable<Song> {
 
     @Id
@@ -36,18 +41,27 @@ public class Song implements Comparable<Song> {
     @Column(length = 100)
     private String artist;
 
-    @Column(length = 100)
+    @Column(length = 200)
     private String lyrics;
 
     @Transient
     private boolean selected = false;
 
+    @Column(nullable = false, name = "length_seconds")
+    private Long lengthSeconds;
+
+    // not in use
     @Transient
     private SongLength length;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "likedSongs", fetch = FetchType.LAZY)
+    private Set<User> downloaders;
 
 
     @Override
     public int compareTo(Song o) {
         return o.timesPlayed - this.timesPlayed;
     }
+
 }

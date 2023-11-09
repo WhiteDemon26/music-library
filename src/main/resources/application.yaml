@@ -9,7 +9,8 @@ spring:
   datasource:
     username: root
     password: '11234'
-    url: jdbc:mysql://localhost:3306/raz?useLegacyDatetimeCode=false&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/raz?useLegacyDatetimeCode=false&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    #url: jdbc:mysql://localhost:3306/raz?useLegacyDatetimeCode=false&useSSL=false&serverTimezone=UTC
     driverClassName: com.mysql.jdbc.Driver
   # JPA & Hibernate configuration
   jpa:

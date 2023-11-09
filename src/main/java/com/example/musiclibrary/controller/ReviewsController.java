@@ -5,10 +5,8 @@ import com.example.musiclibrary.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
@@ -36,7 +34,7 @@ public class ReviewsController {
         try {
             return new ResponseEntity<>(reviewService.getReviewAverage(), HttpStatus.OK);
         } catch (Exception e) {
-            String message = "An error occurred while asking to see the star average of all reviews. \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            String message = "An error occurred while asking to see the stars average of all reviews. \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
             System.out.println(message);
             return null;
         }
@@ -44,9 +42,9 @@ public class ReviewsController {
 
 
     @PostMapping("/add_review")
-    public ResponseEntity<Review> addReview(@RequestBody Review review) {
+    public ResponseEntity<Review> addReview(@RequestBody Review review, @RequestParam("user_id") Long userId) {
         try {
-            Review submittedReview = reviewService.addReview(review);
+            Review submittedReview = reviewService.addReview(review, userId);
             return new ResponseEntity<>(submittedReview, HttpStatus.OK);
         } catch (Exception e) {
             String message = "An error occurred while asking to add a new review !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();

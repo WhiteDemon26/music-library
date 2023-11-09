@@ -245,9 +245,26 @@ public class NewMLMain {
 
     // add new functionality: the User class must include information about the songs that user downloaded and has locally in storage.
 
+    // remove the following bug: a user with id 1L is retrieved in the @PostConstruct method of UserService when the app starts up even if there's no user with this id
+
+    // add endpoints for playSong(), nextSong(), etc.
+
+    // change add review endpoint: specify the id of the user. No reviews should be submitted without their user.
+
+    // change the type of the 'searchOnDB' parameter in the methods of SongsController
+
+    // remove the code 'if(searchOnDB != null)' from SongsController, adapt it to the type you chose above.
+
+    // remove the following bug: deleteSongs() doesn't return the deleted songs. Then remove the use of Scanner from its body, use the same solutions
+    //  we used for findSongsByTitle().
+
+    // remove grammatically incorrect log statements and statements that contain objects or list of objects to store in the DB or retrieved from it
 
 
-    // TODO: remove grammatically incorrect log statements and statements that contain objects or list of objects to store in the DB or retrieved from it
+
+
+    // TODO: add new endpoint to switch profile. Always start with the profile specified in two properties defined in the yaml file,
+    //  that on startup must correctly initialize the myProfile field. Then update its value with that of someone else through this endpoint.
 
 
     // TODO: remove all useless comments around (the ones with "// etc.")
@@ -301,7 +318,7 @@ public class NewMLMain {
 
 
 
-    public static ArrayList<Song> returnFakeSongs() {
+    public static List<Song> returnFakeSongs() {
 
         ArrayList<Song> mySongs = new ArrayList<>();
 

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -22,16 +23,14 @@ import static java.util.Comparator.comparing;
 
 @Data
 @Service
+@Transactional
 public class MusicLibraryService {
 
+    // static serve a condividere a tutti gli utenti una determinata cosa che devono avere in comune che scelgo io di fargliela vedere e avere
     public static final String APP_VERSION = "0.1";
     public final static DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     private List<Song> songs = new ArrayList<>();
-
-    // static serve a condividere a tutti gli utenti una determinata cosa che devono avere in comune che scelgo io di fargliela vedere e avere
-
-    // private viene usata solo dentro l'istanza o dentro l'oggetto creato per essere chiamato fuori da questa classe bisogna chiamare il metodo getter
     private Song songPlayingNow;
     private Boolean isPlayingSongPaused;
     private ArrayList<Song> songsWithTimesPlayed;
@@ -42,8 +41,10 @@ public class MusicLibraryService {
     private boolean alwaysSameSongModeOn;
     private boolean alwaysRandomSongModeOn;
 
+
     @Autowired
     private MusicRepository musicRepository;
+
 
     @PostConstruct
     private void postConstruct() {
@@ -62,6 +63,7 @@ public class MusicLibraryService {
         this.alwaysRandomSongModeOn = false;
     }
 
+
     public void playPreviewSongModeOn() {
         this.alwaysPreviewSongModeOn = true;
         this.alwaysNextSongModeOn = false;
@@ -69,12 +71,14 @@ public class MusicLibraryService {
         this.alwaysRandomSongModeOn = false;
     }
 
+
     public void playSameSongModeOn() {
         this.alwaysSameSongModeOn = true;
         this.alwaysPreviewSongModeOn = false;
         this.alwaysNextSongModeOn = false;
         this.alwaysRandomSongModeOn = false;
     }
+
 
     public void playRandomSongModeOn() {
         this.alwaysRandomSongModeOn = true;
@@ -84,7 +88,7 @@ public class MusicLibraryService {
     }
 
 
-    private void setPlayingMode() throws InterruptedException{
+    private void setPlayingMode() throws InterruptedException {
         if(alwaysPreviewSongModeOn) {
             playIfAlwaysPreviewSongModeOn();
             return;
@@ -104,17 +108,47 @@ public class MusicLibraryService {
     }
 
 
-    public void playSong(Song song) throws InterruptedException {
-        this.songPlayingNow = song;
-        this.isPlayingSongPaused = false;
-        setPlayingMode();
-        play(song);
+    public Song playSongSelectedFromFE(Long songId) throws InterruptedException {
+
+        if(musicRepository.existsById(songId)) {
+            Song song = musicRepository.findById(songId).get();
+            return playSong(song);
+        } else {
+            System.out.println("That id doesn't correspond to any song in storage!");
+            return null;
+        }
     }
 
 
-    public void nextSong() throws InterruptedException {
+    public Song playSong(Song song) throws InterruptedException {
+        this.songPlayingNow = song;
+        setPlayingMode();
+        return play(song);
+    }
+
+
+    private Song play(Song song) throws InterruptedException {
+
+        this.isPlayingSongPaused = false;
+
+        song.setTimesPlayed(song.getTimesPlayed() + 1);
+        System.out.println("the app is playing the song: " + song.getSongName());
+
+        // integrate sleep to simulate the length of the song (just for testing, use only minutes as seconds)
+        // TODO: to remove
+        Long seconds = song.getLengthSeconds();
+        Long fakeSeconds = seconds / 60 * 1000;
+        sleep(fakeSeconds);
+
+        System.out.println("Song ended! ");
+        return song;
+    }
+
+
+    public Song nextSong() throws InterruptedException {
         if(this.songPlayingNow == null) {
-            return;
+            System.out.println("No song is selected, can't find the next one!");
+            return null;
         }
         int index = songs.indexOf(this.songPlayingNow);
         if(index == songs.size()-1) {
@@ -124,13 +158,14 @@ public class MusicLibraryService {
         }
         this.songPlayingNow = songs.get(index);
         setPlayingMode();
-        play(this.songPlayingNow);
+        return play(this.songPlayingNow);
     }
 
 
-    public void previousSong() throws InterruptedException {
+    public Song previousSong() throws InterruptedException {
         if(this.songPlayingNow == null) {
-            return;
+            System.out.println("No song is selected, can't find the previous one!");
+            return null;
         }
         int index = songs.indexOf(this.songPlayingNow);
         if(index == 0) {
@@ -140,8 +175,9 @@ public class MusicLibraryService {
         }
         this.songPlayingNow = songs.get(index);
         setPlayingMode();
-        play(this.songPlayingNow);
+        return play(this.songPlayingNow);
     }
+
 
     private void playIfAlwaysRandomSongModeOn() throws InterruptedException {
         play(this.songPlayingNow);
@@ -187,12 +223,8 @@ public class MusicLibraryService {
     public List<Song> showDownloadedSongs() {
         // returns songs with its songs in order, ordered by submittedOn
         Collections.sort(songs, comparing(Song::getAddedOn).reversed());
-        String message = "You asked to see the downloaded songs (see this response's body) !!";
+        String message = "You asked to see the downloaded songs.";
         System.out.println(message);
-
-        Song v = null;
-        v.getSongName();
-
         return songs;
     }
 
@@ -210,20 +242,23 @@ public class MusicLibraryService {
     }
 
 
-    public String selectSongs(Integer[] indices) {
-        // select is used to select and then to eliminate or share the song or songs
+    public String selectSongs(Long[] ids) {
+        // select is used to select and then to eliminate or share the song or songs by ids
         String message;
 
-        for(Integer indexSong : indices) {
-            Song song = this.songs.get(indexSong);
-            // if the song is not selected
-            if (!song.isSelected()) {
-                song.setSelected(true);
-                this.numberOfSelectedSongs++;
-                // if the song is not selected
-            } else {
-                song.setSelected(false);
-                this.numberOfSelectedSongs--;
+        for(Long id : ids) {
+            for(Song song : songs) {
+                if(Objects.equals(song.getId(), id)) {
+                    // if the song is not selected
+                    if (!song.isSelected()) {
+                        song.setSelected(true);
+                        this.numberOfSelectedSongs++;
+                        // if the song is not selected
+                    } else {
+                        song.setSelected(false);
+                        this.numberOfSelectedSongs--;
+                    }
+                }
             }
         }
         if(this.numberOfSelectedSongs > 0) {
@@ -231,7 +266,6 @@ public class MusicLibraryService {
         } else {
             message = "";
         }
-
         return message;
     }
 
@@ -246,20 +280,15 @@ public class MusicLibraryService {
         this.songs.addAll(newSongs);
         this.musicRepository.saveAll(newSongs);
 
-        String message = "You added new songs (see this response's body) !!";
+        String message = "You added new songs.";
         System.out.println(message);
         return newSongs;
     }
 
 
-
-    public List<Song> deleteSongs() {
+    public List<Song> deleteSongs(Boolean deleteDBSongs) {
 
         ArrayList<Song> songsCopy = new ArrayList<>(this.songs);
-
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Do you want to delete the songs even from the DB? ");
-        Boolean deleteDBSongs = scan.nextBoolean();
 
         for (Song song : songsCopy) {
             if (song.isSelected()) {
@@ -270,26 +299,8 @@ public class MusicLibraryService {
                 }
             }
         }
-        return songs;
+        return this.songs;
     }
-
-
-    private void play(Song song) throws InterruptedException {
-
-        this.isPlayingSongPaused = false;
-
-        song.setTimesPlayed(song.getTimesPlayed() + 1);
-        System.out.println("the app is playing the song: " + song.getSongName());
-
-        // integrate sleep to simulate the length of the song (just for testing, use only minutes as seconds)
-        // TODO: to remove
-        int minutes = song.getLength().getMinutes();
-        int fakeSeconds = minutes * 1000;
-        sleep(fakeSeconds);
-
-        System.out.println("Song ended! ");
-    }
-
 
 
     public void pauseSong() {
@@ -298,12 +309,11 @@ public class MusicLibraryService {
     }
 
 
-
-    public List<Song> searchSongByTitle(String searchOnDB, String partOfTitle) {
+    public List<Song> searchSongByTitle(Boolean searchOnDB, String partOfTitle) {
 
         List<Song> returnMusic = new ArrayList<>();
 
-        if(searchOnDB != null) {
+        if(searchOnDB) {
             return this.musicRepository.findBySongNameContaining(partOfTitle);
         } else {
             for (Song song : this.songs) {
@@ -319,12 +329,11 @@ public class MusicLibraryService {
     }
 
 
-
-    public List<Song> searchSongByArtist(String searchOnDB, String partOfArtistName) {
+    public List<Song> searchSongByArtist(Boolean searchOnDB, String partOfArtistName) {
 
         List<Song> returnMusic = new ArrayList<>();
 
-        if(searchOnDB != null) {
+        if(searchOnDB) {
             return this.musicRepository.findByArtistContaining(partOfArtistName);
         } else {
             for (Song song : this.songs) {
@@ -338,11 +347,11 @@ public class MusicLibraryService {
     }
 
 
-    public List<Song> searchSongByLyrics(String searchOnDB, String partOfLyrics) {
+    public List<Song> searchSongByLyrics(Boolean searchOnDB, String partOfLyrics) {
 
         List<Song> returnMusic = new ArrayList<>();
 
-            if(searchOnDB != null) {
+            if(searchOnDB) {
                 return this.musicRepository.findByLyricsContaining(partOfLyrics);
             } else {
                 for (Song song : this.songs) {
@@ -356,26 +365,23 @@ public class MusicLibraryService {
     }
 
 
-    public ArrayList<Song> findMostPlayedSongs() {
+    public List<Song> findMostPlayedSongs() {
         // ArrayList<Song> songsCopy = (ArrayList<Song>)this.songs.clone();
         // not valid anymore: songs is a List
-        ArrayList<Song> songsCopy = new ArrayList<Song>(this.songs);
-
+        List<Song> songsCopy = new ArrayList<Song>(this.songs);
         // we could remove the songs that have never been listened to through:
         // songsCopy = new ArrayList<>(mostPlayedSongs.stream().filter(song -> song.timesPlayed != 0).collect(Collectors.toList()));
         // but java streams are used and you don't know them yet! Use method below
-
         // we copy the arraylist because we can't modify it while looping through it
         for (Song song : songs) {
             if (song.getTimesPlayed() == 0) {
                 songsCopy.remove(song);
             }
         }
-
         // let's sort the songs by number of times they have been played ( comparing(etc.) )
         //Collections.sort(songsCopy, comparing(Song::getTimesPlayed).reversed());
         Collections.sort(songsCopy);
-        String message = "You asked to see the most played songs !!";
+        String message = "You asked to see the most played songs.";
         System.out.println(message);
         return songsCopy;
     }
@@ -390,12 +396,10 @@ public class MusicLibraryService {
                 songs4Friends.add(song);
             }
             // the song is shared
-            //System.out.println("song shared with your friends!!");
         }
         for ( User friend : friends) {
             // Boolean sentSuccessful = SendHttpRequest.send(songs4Friends , friend);
         }
-
         return true;
     }
 }

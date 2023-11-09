@@ -1,8 +1,9 @@
 package com.example.musiclibrary.service;
 
 import com.example.musiclibrary.model.Review;
+import com.example.musiclibrary.model.User;
 import com.example.musiclibrary.repository.ReviewRepository;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.example.musiclibrary.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,15 +13,21 @@ import javax.annotation.PostConstruct;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.musiclibrary.service.MusicLibraryService.CUSTOM_FORMATTER;
 
 @Data
 @Service
+@Transactional
 public class ReviewService {
 
     public String reviewAverage;
     private static final java.text.DecimalFormat DecimalFormat = new DecimalFormat("0.0");
+
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -31,10 +38,14 @@ public class ReviewService {
     }
 
 
-    public Review addReview(Review review) {
+    public Review addReview(Review review, Long userId) {
 
-        review.getStars();
-
+        Optional<User> checkUser = this.userRepository.findById(userId);
+        if(!checkUser.isPresent()) {
+            System.out.println("\n A user with the id" + userId + " is not present! \n");
+            return null;
+        }
+        review.setUser(checkUser.get());
         if (review.getStars() > 0 && review.getStars() < 6) {
             review.thumbUpOrThumbDown();
             review.setSubmittedOn(LocalDateTime.now());
@@ -53,9 +64,7 @@ public class ReviewService {
 
 
     public List<Review> readReviews() {
-        List<Review> reviews = reviewRepository.findAll();
-        System.out.println("Those are all reviews: " + reviews);
-        return reviews;
+        return reviewRepository.findAll();
     }
 
 

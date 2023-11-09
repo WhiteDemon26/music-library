@@ -23,7 +23,7 @@ public class UsersController {
             List<User> listUsers = userService.findUsers();
             return new ResponseEntity<>(listUsers, HttpStatus.OK);
         } catch (Exception e) {
-            String message = "An error occurred while asking to see all the Users. \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            String message = "An error occurred while asking to see all the users. \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
             System.out.println(message);
             return null;
         }
@@ -45,7 +45,7 @@ public class UsersController {
     @PutMapping("/update_my_profile")
     public ResponseEntity<User> updateProfile(@RequestBody User user) {
         try {
-            User reSubmittedUser = userService.updateUserProfile(user);
+            User reSubmittedUser = userService.updateMyProfile(user);
             return new ResponseEntity<>(reSubmittedUser, HttpStatus.OK);
         } catch(Exception e) {
             String message = "An error occurred, your profile couldn't be updated !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
