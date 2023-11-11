@@ -260,11 +260,15 @@ public class NewMLMain {
 
     // remove grammatically incorrect log statements and statements that contain objects or list of objects to store in the DB or retrieved from it
 
-
-
-
-    // TODO: add new endpoint to switch profile. Always start with the profile specified in two properties defined in the yaml file,
+    // add new endpoint to switch profile. Always start with the profile specified in two properties defined in the yaml file,
     //  that on startup must correctly initialize the myProfile field. Then update its value with that of someone else through this endpoint.
+
+    // add null check to checkValidityOfPassword() when a new user registers
+
+    // add checks on the existence of the username when a new user registers
+
+    // add code to manage errors due to password duplicates when a new user registers
+
 
 
     // TODO: remove all useless comments around (the ones with "// etc.")
@@ -298,7 +302,7 @@ public class NewMLMain {
 
         //returnFakeReviews();
         //returnFakeSongs()
-        MusicLibraryTest music = new MusicLibraryTest();
+        MusicLibraryOldExercises music = new MusicLibraryOldExercises();
         music.checkIncreaseTimesPlayed();
 
 

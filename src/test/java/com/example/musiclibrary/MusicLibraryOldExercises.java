@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import static com.example.musiclibrary.NewMLMain.returnFakeSongs;
 import static java.lang.Thread.sleep;
 
-public class MusicLibraryTest {
+public class MusicLibraryOldExercises {
 
 
 

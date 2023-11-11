@@ -32,10 +32,10 @@ public class User {
     @Column(length = 100, nullable = false, name = "last_name")
     private String lastName;
 
-    @Column(length = 100, name = "user_name")
+    @Column(length = 100, name = "user_name", unique = true)
     private String userName;
 
-    @Column(length = 100)
+    @Column(length = 100, unique = true)
     private String password;
 
     @Column(length = 100)

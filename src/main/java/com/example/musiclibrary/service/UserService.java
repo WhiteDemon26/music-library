@@ -4,6 +4,7 @@ import com.example.musiclibrary.model.User;
 import com.example.musiclibrary.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,9 @@ import java.util.List;
 @Transactional
 public class UserService {
 
+    @Value("${user.initial-username}")
+    private String userName;
+
     private User myProfile;
 
     @Autowired
@@ -25,8 +29,8 @@ public class UserService {
 
     @PostConstruct
     private void postConstruct() {
-        if(userRepository.existsById(1L)) {
-            User oldProfile = userRepository.findById(1L).get();
+        User oldProfile = userRepository.findUserByUserName(userName);
+        if(oldProfile != null) {
             LocalDate today = LocalDate.now();
             int updatedAge = (Period.between(oldProfile.getBirthdate(), today).getYears());
             if (updatedAge > oldProfile.getAge()) {
@@ -38,8 +42,29 @@ public class UserService {
     }
 
 
+    public User switchProfile(String userName) {
+        User profileSwitched = userRepository.findUserByUserName(userName);
+        if(profileSwitched != null) {
+            this.myProfile = profileSwitched;
+        } else {
+            System.out.println("Profile not found");
+            return null;
+        }
+        System.out.println("You switched profile !");
+        return this.myProfile;
+    }
+
+
     public User addUser(User user) {
-        if (!checkValidityOfPassword(user)) {
+        if(!checkValidityOfPassword(user)) {
+            return null;
+        }
+        if( user.getUserName() == null ) {
+            System.out.println("The userName must not be null");
+            return null;
+        }
+        if(userRepository.findUserByUserName(user.getUserName()) != null) {
+            System.out.println("This userName is already used!");
             return null;
         }
         user.setRegistration(LocalDateTime.now());
@@ -91,18 +116,26 @@ public class UserService {
     private boolean checkValidityOfPassword(User user) {
 
         String password = user.getPassword();
+        if(password == null) {
+            System.out.println("The password must not be null");
+            return false;
+        }
+        if( userRepository.findByPassword(password) != null ) {
+            System.out.println("This password is already used!");
+            return false;
+        }
 
         boolean hasSpecialCharacters = password.contains("!") || password.contains("£") || password.contains("$") || password.contains("%");
         boolean containsName = password.contains(user.getFirstName());
         boolean passwordValid = hasSpecialCharacters && !containsName && password.length() >= 8;
 
-        if (containsName) {
+        if(containsName) {
             System.out.println("Your password must not contain your name");
         }
-        if (!hasSpecialCharacters) {
+        if(!hasSpecialCharacters) {
             System.out.println("Your password must contain at least one special character");
         }
-        if (password.length() < 8) {
+        if(password.length() < 8) {
             System.out.println("Your password must contain at least 8 digits");
         }
         return passwordValid;

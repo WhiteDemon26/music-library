@@ -22,3 +22,5 @@ spring:
     hibernate:
       ddl-auto: none
 
+user:
+  initial-username: WhiteDemon

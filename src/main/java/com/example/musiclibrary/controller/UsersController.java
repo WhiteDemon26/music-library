@@ -53,4 +53,17 @@ public class UsersController {
             return null;
         }
     }
+
+
+    @PutMapping("/switch_profile")
+    public ResponseEntity<User> switchProfile(@RequestParam("user_name") String userName) {
+        try {
+            User switchedProfile = userService.switchProfile(userName);
+            return new ResponseEntity<>(switchedProfile, HttpStatus.OK);
+        } catch(Exception e) {
+            String message = "An error occurred, you can't switch the profile !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            System.out.println(message);
+            return null;
+        }
+    }
 }
