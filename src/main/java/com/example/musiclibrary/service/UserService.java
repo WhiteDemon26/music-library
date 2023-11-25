@@ -3,6 +3,7 @@ package com.example.musiclibrary.service;
 import com.example.musiclibrary.model.User;
 import com.example.musiclibrary.repository.UserRepository;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Service
@@ -56,11 +58,16 @@ public class UserService {
 
 
     public User addUser(User user) {
-        if(!checkValidityOfPassword(user)) {
+
+        if(user.getFirstName() == null) {
+            System.out.println("Your firstName must not be null");
             return null;
         }
-        if( user.getUserName() == null ) {
-            System.out.println("The userName must not be null");
+        if( !checkValidityOfPassword(user) ) {
+            return null;
+        }
+        if(user.getUserName() == null) {
+            System.out.println("Your userName must not be null");
             return null;
         }
         if(userRepository.findUserByUserName(user.getUserName()) != null) {
@@ -86,15 +93,18 @@ public class UserService {
 
         if (user.getFirstName() != null) {
             myProfile.setFirstName(user.getFirstName());
+            System.out.println("You changed your first name, good job!)");
         }
         if (user.getLastName() != null) {
             myProfile.setLastName(user.getLastName());
+            System.out.println("You changed your last name, good job!)");
         }
         if (user.getUserName() != null) {
             myProfile.setUserName(user.getUserName());
+            System.out.println("You changed your user name, good job!)");
         }
-        if (user.getPassword() != null & user.getPassword() != user.getOldPassword()) {
-            if (checkValidityOfPassword(user)) {
+        if ( user.getPassword() != null && !StringUtils.equals(user.getPassword(), myProfile.getOldPassword()) ) {
+            if ( checkValidityOfPassword(user) ) {
                 myProfile.setOldPassword(myProfile.getPassword());
                 myProfile.setPassword(user.getPassword());
                 System.out.println("You changed your password, good job!)");
@@ -104,6 +114,7 @@ public class UserService {
         }
         if (user.getAddress() != null) {
             myProfile.setAddress(user.getAddress());
+            System.out.println("You changed your address, good job!)");
         }
 
         user = userRepository.save(myProfile);
@@ -120,20 +131,20 @@ public class UserService {
             System.out.println("The password must not be null");
             return false;
         }
-        if( userRepository.findByPassword(password) != null ) {
+        if(userRepository.findByPassword(password) != null) {
             System.out.println("This password is already used!");
             return false;
         }
 
         boolean hasSpecialCharacters = password.contains("!") || password.contains("£") || password.contains("$") || password.contains("%");
-        boolean containsName = password.contains(user.getFirstName());
+        boolean containsName = ( StringUtils.isNotEmpty(user.getFirstName()) ) ? password.contains(user.getFirstName()) : password.contains(myProfile.getFirstName());
         boolean passwordValid = hasSpecialCharacters && !containsName && password.length() >= 8;
 
-        if(containsName) {
-            System.out.println("Your password must not contain your name");
-        }
         if(!hasSpecialCharacters) {
             System.out.println("Your password must contain at least one special character");
+        }
+        if(containsName) {
+            System.out.println("Your password must not contain your name");
         }
         if(password.length() < 8) {
             System.out.println("Your password must contain at least 8 digits");

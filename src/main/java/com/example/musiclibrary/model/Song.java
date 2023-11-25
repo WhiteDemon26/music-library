@@ -55,7 +55,7 @@ public class Song implements Comparable<Song> {
     private SongLength length;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "likedSongs", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "likedSongs", fetch = FetchType.EAGER)
     private Set<User> downloaders;
 
 
@@ -64,4 +64,17 @@ public class Song implements Comparable<Song> {
         return o.timesPlayed - this.timesPlayed;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Song song = (Song) o;
+        return getTimesPlayed() == song.getTimesPlayed() && isSelected() == song.isSelected() && Objects.equals(getId(), song.getId()) && Objects.equals(getSongName(), song.getSongName()) && Objects.equals(getAddedOn(), song.getAddedOn()) && Objects.equals(getAddedOnStringFormat(), song.getAddedOnStringFormat()) && Objects.equals(getArtist(), song.getArtist()) && Objects.equals(getLyrics(), song.getLyrics()) && Objects.equals(getLengthSeconds(), song.getLengthSeconds()) && Objects.equals(getLength(), song.getLength()) && Objects.equals(getDownloaders(), song.getDownloaders());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getSongName(), getTimesPlayed(), getAddedOn(), getAddedOnStringFormat(), getArtist(), getLyrics(), isSelected(), getLengthSeconds(), getLength(), getDownloaders());
+    }
 }

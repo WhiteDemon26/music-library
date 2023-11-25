@@ -14,11 +14,11 @@ public class SongLength {
         if(hours < 0) {
             throw new RuntimeException("Don't put an hour less than 0");
         }
-        if(minutes > 60 || minutes < 0) {
-            throw new RuntimeException("Don't put minutes less than 0");
+        if(minutes >= 60 || minutes < 0) {
+            throw new RuntimeException("Don't put minutes less than 0 or more than 59");
         }
-        if(seconds > 60 || seconds < 0) {
-            throw new RuntimeException("Don't put seconds less than 0");
+        if(seconds >= 60 || seconds < 0) {
+            throw new RuntimeException("Don't put seconds less than 0 or more than 59");
         }
         this.hours = hours;
         this.minutes = minutes;

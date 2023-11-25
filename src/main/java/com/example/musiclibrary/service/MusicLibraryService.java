@@ -103,7 +103,6 @@ public class MusicLibraryService {
         }
         if(alwaysRandomSongModeOn) {
             playIfAlwaysRandomSongModeOn();
-            return;
         }
     }
 
@@ -234,7 +233,7 @@ public class MusicLibraryService {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String path = System.getProperty("user.dir") + "\\src\\main\\resources\\default_songs.json";
-            return objectMapper.readValue(new File(path), new TypeReference<List<Song>>(){});
+            return objectMapper.readValue(new File(path), new TypeReference<>(){});
         } catch (Exception e) {
             System.out.println("An error occurred while downloading the default songs !!" + e.getMessage());
             return Collections.emptyList();
@@ -289,17 +288,20 @@ public class MusicLibraryService {
     public List<Song> deleteSongs(Boolean deleteDBSongs) {
 
         ArrayList<Song> songsCopy = new ArrayList<>(this.songs);
+        ArrayList<Song> deletedSongs = new ArrayList<>();
 
         for (Song song : songsCopy) {
             if (song.isSelected()) {
+                deletedSongs.add(song);
                 this.songs.remove(song);
+                System.out.println("Your song " + song.getSongName() +" has been deleted from songs.");
                 if (deleteDBSongs) {
                     musicRepository.delete(song);
                     System.out.println("Your song " + song.getSongName() +" has been deleted from the DB.");
                 }
             }
         }
-        return this.songs;
+        return deletedSongs;
     }
 
 
@@ -368,7 +370,7 @@ public class MusicLibraryService {
     public List<Song> findMostPlayedSongs() {
         // ArrayList<Song> songsCopy = (ArrayList<Song>)this.songs.clone();
         // not valid anymore: songs is a List
-        List<Song> songsCopy = new ArrayList<Song>(this.songs);
+        List<Song> songsCopy = new ArrayList<>(this.songs);
         // we could remove the songs that have never been listened to through:
         // songsCopy = new ArrayList<>(mostPlayedSongs.stream().filter(song -> song.timesPlayed != 0).collect(Collectors.toList()));
         // but java streams are used and you don't know them yet! Use method below

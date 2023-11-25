@@ -42,7 +42,7 @@ public class ReviewService {
 
         Optional<User> checkUser = this.userRepository.findById(userId);
         if(!checkUser.isPresent()) {
-            System.out.println("\n A user with the id" + userId + " is not present! \n");
+            System.out.println("\n A user with the id: " + userId + " is not present! \n");
             return null;
         }
         review.setUser(checkUser.get());
@@ -69,17 +69,17 @@ public class ReviewService {
 
 
     private String calculateStarsAverage() {
-            float average;
-            int sum = 0;
-            List<Review> reviews = reviewRepository.findAll();
-            float howManyReviews = reviews.size();
+        float average;
+        int sum = 0;
+        List<Review> reviews = reviewRepository.findAll();
+        float howManyReviews = reviews.size();
 
-            for (Review review : reviews) {
-                sum = sum + review.getStars();
-            }
-            average = sum / howManyReviews;
-            System.out.println("the average value is: " + average);
-            reviewAverage = DecimalFormat.format(average);
-            return DecimalFormat.format(average);
+        for (Review review : reviews) {
+            sum = sum + review.getStars();
+        }
+        average = sum / howManyReviews;
+        System.out.println("the average value is: " + average);
+        reviewAverage = DecimalFormat.format(average);
+        return DecimalFormat.format(average);
     }
 }

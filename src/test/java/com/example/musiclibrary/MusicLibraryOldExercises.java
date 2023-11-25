@@ -92,14 +92,14 @@ public class MusicLibraryOldExercises {
 
 
     public void removeRandomSongs() throws InterruptedException {
-        int range = 10;
+        long range = 10L;
         MusicLibraryService musicLibraryService = new MusicLibraryService();
         ArrayList<Song> returnMusic = new ArrayList<>();
         returnMusic.addAll((returnFakeSongs()));
 
         while (true) {
             Random rand = new Random();
-            Long index = rand.nextLong(range);
+            Long index = rand.nextLong();
             List<Song> songs = musicLibraryService.getSongs();
             Long[] numbers = new Long[]{index};
             String message = musicLibraryService.selectSongs(numbers);

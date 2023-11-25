@@ -271,10 +271,15 @@ public class NewMLMain {
 
 
 
-    // TODO: remove all useless comments around (the ones with "// etc.")
-
+    // TODO: change the type of artist in Song, allow the possibility of several artists for a single song.
 
     // TODO: add functionality to retrieve a user from the DB through its Id.
+
+
+
+    // dovrei aggiungere su update myProfile il fatto che quando cambio la password e l'username
+    // devono essere unici quindi deve cercare sul database se già sono esistenti e fare un controllo
+    // perchè non siano esistenti già altrimenti dovrebbe non farmi modificare il myProfile
 
 
 
@@ -327,6 +332,7 @@ public class NewMLMain {
         ArrayList<Song> mySongs = new ArrayList<>();
 
         Song song1 = Song.builder()
+                .id(1L)
                 .songName("Bailando")
                 .artist("Enrique Inglesias")
                 .lyrics("Yo te miro y se me corta la respiración\n" +
@@ -338,9 +344,11 @@ public class NewMLMain {
                 .timesPlayed(20)
                 .addedOn(LocalDateTime.of(2010, 2, 2, 18, 9))
                 .addedOnStringFormat(LocalDateTime.of(2010, 2, 2, 18, 9).format(CUSTOM_FORMATTER))
+                .lengthSeconds(200L)
                 .length(new SongLength(0, 3, 47))
                 .build();
         Song song2 = Song.builder()
+                .id(2L)
                 .songName("Subeme La Radio")
                 .artist("Enrique Inglesias")
                 .lyrics("Súbeme la radio que esta es mi canción\n" +
@@ -351,8 +359,10 @@ public class NewMLMain {
                 .addedOn(LocalDateTime.of(2020, 8, 26, 16, 30))
                 .addedOnStringFormat(LocalDateTime.of(2020, 8, 26, 16, 30).format(CUSTOM_FORMATTER))
                 .length(new SongLength(0, 3, 53))
+                .lengthSeconds(200L)
                 .build();
         Song song3 = Song.builder()
+                .id(3L)
                 .songName("Craigie Hill")
                 .artist("Cara Dillon")
                 .lyrics("It being in the springtime and the small\n" +
@@ -366,6 +376,7 @@ public class NewMLMain {
                 .length(new SongLength(0, 5, 30))
                 .build();
         Song song4 = Song.builder()
+                .id(4L)
                 .songName("Country Boy")
                 .artist("Alan Jackson")
                 .lyrics("Excuse me ma'am, I saw you walkin'\n" +
@@ -378,6 +389,7 @@ public class NewMLMain {
                 .length(new SongLength(0, 4, 3))
                 .build();
         Song song5 = Song.builder()
+                .id(9L)
                 .songName("Limbo")
                 .artist("Daddy Yankee")
                 .lyrics("Vamos cógele el ritmo, cintura, rodilla al piso\n" +
@@ -390,6 +402,7 @@ public class NewMLMain {
                 .length(new SongLength(0, 4, 15))
                 .build();
         Song song6 = Song.builder()
+                .id(6L)
                 .songName("El Perdòn")
                 .artist("Nicky Jam y Enrique Inglesias")
                 .lyrics("Dime si es verdad\n" +
@@ -405,6 +418,7 @@ public class NewMLMain {
                 .length(new SongLength(0, 3, 47))
                 .build();
         Song song7 = Song.builder()
+                .id(5L)
                 .songName("International Love")
                 .artist("Pitbull")
                 .lyrics("You can't catch me boy (can't catch me boy)\n" +
@@ -420,6 +434,7 @@ public class NewMLMain {
                 .length(new SongLength(0, 4, 9))
                 .build();
         Song song8 = Song.builder()
+                .id(7L)
                 .songName("Me Voy Enamorando ft. Farruko (remix)")
                 .artist("Chino & Nacho")
                 .lyrics("Me caes bien\n" +
