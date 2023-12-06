@@ -24,7 +24,6 @@ public class SongLength {
         this.minutes = minutes;
         this.seconds = seconds;
         this.formattedLength = formattedForLength(hours, minutes, seconds);
-
     }
 
     private String formattedForLength(Integer hours, Integer minutes, Integer seconds) {

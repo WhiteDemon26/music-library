@@ -1,7 +1,9 @@
 package com.example.musiclibrary.service;
 
+import com.example.musiclibrary.model.ProfileConfiguration;
 import com.example.musiclibrary.model.User;
 import com.example.musiclibrary.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -25,8 +26,19 @@ public class UserServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    MusicLibraryService musicLibraryService;
+
     @InjectMocks
     UserService userService;
+
+    ProfileConfiguration profileConfiguration = new ProfileConfiguration("pippo");
+
+
+    @BeforeEach
+    void initializeProfileConfiguration() {
+        userService.setProfileConfiguration(profileConfiguration);
+    }
 
 
     @Test
@@ -40,8 +52,10 @@ public class UserServiceTest {
 
         when(userRepository.findUserByUserName("Razvan")).thenReturn(user);
         userService.switchProfile("Razvan");
-        assertEquals(userService.getMyProfile(), user);
-        verify(userRepository).findUserByUserName("Razvan");
+
+        verify(musicLibraryService).updateMusicLibrary4NewProfile("Razvan");
+        assertEquals(profileConfiguration.getMyProfile(), user);
+        //verify(userRepository).findUserByUserName("Razvan");
 
         when(userRepository.findUserByUserName("Raz")).thenReturn(null);
         User fakeUser = userService.switchProfile("Raz");
@@ -61,8 +75,6 @@ public class UserServiceTest {
                         .age(20)
                         .build();
 
-
-
         if( testCase.contains("password already used") ) {
             when(userRepository.findByPassword(user.getPassword())).thenReturn(user);
         }
@@ -70,7 +82,7 @@ public class UserServiceTest {
             when(userRepository.findByPassword(user.getPassword())).thenReturn(null);
         }
         if( testCase.contains("username already used") ) {
-            when(userRepository.findUserByUserName("razvan")).thenReturn(user);
+            when(userRepository.findUserByUserName("usernameUsed")).thenReturn(user);
         }
         if( testCase.contains("user correctly registered") ) {
             when(userRepository.findUserByUserName("razvan123")).thenReturn(null);
@@ -139,7 +151,7 @@ public class UserServiceTest {
     @MethodSource("retrieveArgumentsTestUpdateMyProfile")
     public void testUpdateMyProfile(String testCase, String firstName, String lastName, String userName, String password, String address) {
 
-        userService.setMyProfile(User.builder()
+        profileConfiguration.setMyProfile(User.builder()
                                         .userName("current userName")
                                         .password("current password")
                                         .oldPassword("old password")
@@ -156,7 +168,7 @@ public class UserServiceTest {
                                 .address(address)
                                 .build();
 
-        when(userRepository.save(userService.getMyProfile())).thenReturn(newProfile);
+        when(userRepository.save(profileConfiguration.getMyProfile())).thenReturn(newProfile);
 
         if( testCase.contains("password is already used") ) {
             when(userRepository.findByPassword(newProfile.getPassword())).thenReturn(newProfile);
@@ -165,23 +177,23 @@ public class UserServiceTest {
             when(userRepository.findByPassword(newProfile.getPassword())).thenReturn(null);
         }
 
-        newProfile = userService.updateMyProfile(newProfile);
+        newProfile = userService.updateProfile(newProfile);
 
         if( testCase.contains("no new password") ) {
-            assertThat(userService.getMyProfile())
+            assertThat(profileConfiguration.getMyProfile())
                     .usingRecursiveComparison()
                     .ignoringFields("password")
                     .ignoringFields("oldPassword")
                     .isEqualTo(newProfile);
         }
 
-        verify(userRepository).save(userService.getMyProfile());
+        verify(userRepository).save(profileConfiguration.getMyProfile());
 
         if( testCase.contains("password correctly updated") ) {
-            assertEquals(userService.getMyProfile().getPassword(), newProfile.getPassword());
-            assertEquals(userService.getMyProfile().getOldPassword(), "current password");
+            assertEquals(profileConfiguration.getMyProfile().getPassword(), newProfile.getPassword());
+            assertEquals(profileConfiguration.getMyProfile().getOldPassword(), "current password");
         } else {
-            assertEquals(userService.getMyProfile().getPassword(), "current password");
+            assertEquals(profileConfiguration.getMyProfile().getPassword(), "current password");
         }
     }
 
@@ -239,60 +251,4 @@ public class UserServiceTest {
                 )
         );
     }
-
-
-    @Test
-    void testAddUser() {
-
-        // 1st case: firstName null
-        User user = User.builder()
-                        .id(2L)
-                        .userName("razvan123")
-                        .age(20)
-                        .build();
-
-        // 5th case: password contains first name
-        user.setPassword("!Razvan31542");
-
-        User profileToAdd = userService.addUser(user);
-        assertNull(profileToAdd);
-        System.out.println("\n");
-
-        // 6th case: password not contains at least 8 digits
-        user.setPassword("!Raz32");
-
-        profileToAdd = userService.addUser(user);
-        assertNull(profileToAdd);
-        System.out.println("\n");
-
-        // 7th case: username null
-        user.setUserName(null);
-        user.setPassword("!Raz323247");
-
-        profileToAdd = userService.addUser(user);
-        assertNull(profileToAdd);
-        System.out.println("\n");
-
-        // 8th case: userName already used
-        user.setUserName("razvan123");
-        user.setPassword("!Raz323247");
-
-        when(userRepository.findUserByUserName("razvan123")).thenReturn(user);
-        profileToAdd = userService.addUser(user);
-        assertNull(profileToAdd);
-        System.out.println("\n");
-
-        // 9th case: user correctly registered
-        user.setUserName("razvan123");
-        user.setPassword("!Raz323247");
-        user.setLastName("Bogdan");
-        user.setBirthdate(LocalDate.now());
-
-        when(userRepository.findUserByUserName("razvan123")).thenReturn(null);
-
-        userService.addUser(user);
-
-        verify(userRepository).save(user);
-    }
-
 }

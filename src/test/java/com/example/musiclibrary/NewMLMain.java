@@ -269,16 +269,61 @@ public class NewMLMain {
 
     // add code to manage errors due to password duplicates when a new user registers
 
+    // add functionality to retrieve a user from the DB through its Id.
+
+    // change updateProfile(): username must be unique so no update should be possible if someone tries to change his own username
+    //  with someone else's. Test the functionality.
+
+    // remove the bug of memorizing all the songs in the DB inside the 'songs' arraylist on startup. Each user should get only his own downloaded songs.
+
+    // add functionality: when switching profile, the 'songs' list should change accordingly
+
+    // squash bug - what happens to songPlayingNow, isPlayingSongPaused, friends, numberOfSelectedSongs?
+    //  hint: create a new method to do it.
+
+    // make sure userName in MusicLibraryService cannot be changed after obtaining the name of the username from the yaml file.
+
+    // remove the bug of saving the default songs to the DB again when starting the application with no songs associated with your profile
+    //  TO BE CHECKED !!
+
+    // create a class containing all the initial & current profile information necessary to our beans.
+    //  Integrate it with the rest of the app where it's necessary.
+
+    // add an endpoint to inspect the current active profile.
+
+    // add functionality to associate the downloaded songs to the user that downloaded them.
 
 
-    // TODO: change the type of artist in Song, allow the possibility of several artists for a single song.
+    // add functionality to downloaded songs from the DB that have been uploaded by other users.
+    //  hint: find a way to identify a song that someone else put in the DB, retrieve it and add it to your songs
+    //  both locally and on the DB.
 
-    // TODO: add functionality to retrieve a user from the DB through its Id.
+    // edit the Song class: create a field that specifies the user who uploaded it on the DB. Change the DB accordingly
+
+    // edit the delete functionality: you can't delete the songs on the DB that have been uploaded by other users nor yours if someone else downloaded them.
+
+    // include a new variable 'url' in Song whose value is unique. Create a system to create urls when a user adds a song to the DB.
+    //  hint: the model could be https://www.razmusiclibrary.com/ci475Vwc10
+    //  use the code RandomStringUtils.random(length, useLetters, useNumbers) to generate N randomSongCodes where N is the number of songs you have on the DB.
+    //  Use these codes to give each of those songs an url.
+
+    // make a specific method containing all the new functionality that generates an url for a new song.
 
 
 
-    // dovrei aggiungere su update myProfile il fatto che quando cambio la password e l'username
-    // devono essere unici quindi deve cercare sul database se già sono esistenti e fare un controllo
+
+    // TODO: merge the branch 'razvan' into 'many-to-many'
+
+
+
+    // TODO: create an Artist class that has a correspondent table in the DB. Change the type of the 'artist' field in Song allowing the possibility of
+    //  several artists for a single song. Check if changes are necessary to the searchSongByArtist() method
+
+
+
+
+    // dovrei aggiungere su updateProfile() il fatto che quando cambio l'username
+    // deve essere unico quindi deve cercare sul database se già sono esistenti e fare un controllo
     // perchè non siano esistenti già altrimenti dovrebbe non farmi modificare il myProfile
 
 

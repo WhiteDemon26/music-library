@@ -60,10 +60,7 @@ public class User {
     private List<Review> submittedReviews;
 
     //@JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "song_like",
-                joinColumns = @JoinColumn(name = "user_id"),
-                inverseJoinColumns = @JoinColumn(name = "song_id"))
+    @JsonIgnore
+    @ManyToMany(mappedBy = "downloaders", fetch = FetchType.EAGER)
     private Set<Song> likedSongs;
-
 }

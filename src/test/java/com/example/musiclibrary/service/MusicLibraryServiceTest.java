@@ -190,7 +190,7 @@ public class MusicLibraryServiceTest {
                         .lengthSeconds(200L)
                         .build();
         mySongs.addAll(List.of(song1, song2));
-        musicLibraryService.addSongs(mySongs);
+        musicLibraryService.uploadSongs(mySongs);
         assertEquals(musicLibraryService.getSongs(), mySongs);
 
         assertNotNull(musicLibraryService.getSongs());

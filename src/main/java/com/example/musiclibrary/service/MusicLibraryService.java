@@ -1,29 +1,31 @@
 package com.example.musiclibrary.service;
 
+import com.example.musiclibrary.model.ProfileConfiguration;
 import com.example.musiclibrary.repository.MusicRepository;
 import com.example.musiclibrary.model.Song;
 import com.example.musiclibrary.model.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 import static java.util.Comparator.comparing;
 
 @Data
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class MusicLibraryService {
 
     // static serve a condividere a tutti gli utenti una determinata cosa che devono avere in comune che scelgo io di fargliela vedere e avere
@@ -33,7 +35,6 @@ public class MusicLibraryService {
     private List<Song> songs = new ArrayList<>();
     private Song songPlayingNow;
     private Boolean isPlayingSongPaused;
-    private ArrayList<Song> songsWithTimesPlayed;
     private ArrayList<User> friends;
     private int numberOfSelectedSongs;
     private boolean alwaysNextSongModeOn;
@@ -41,18 +42,31 @@ public class MusicLibraryService {
     private boolean alwaysSameSongModeOn;
     private boolean alwaysRandomSongModeOn;
 
-
     @Autowired
     private MusicRepository musicRepository;
 
+    @Autowired
+    private ProfileConfiguration profileConfiguration;
 
     @PostConstruct
     private void postConstruct() {
-        this.songs = musicRepository.findAll();
+        this.songs = musicRepository.findByDownloaders_UserName(profileConfiguration.getInitialUsername());
         if(this.songs.isEmpty()) {
-            addSongs(defaultSongs());
+            this.songs = defaultSongs();
             System.out.println("You got some songs as a gift for downloading the app! Thank you for your support <3!");
         }
+    }
+
+
+    public void updateMusicLibrary4NewProfile(String userName) {
+        this.songs = musicRepository.findByDownloaders_UserName(userName);
+        this.songPlayingNow = null;
+        this.isPlayingSongPaused = false;
+        this.numberOfSelectedSongs = 0;
+        this.alwaysNextSongModeOn = false;
+        this.alwaysPreviewSongModeOn = false;
+        this.alwaysSameSongModeOn = false;
+        this.alwaysRandomSongModeOn = false;
     }
 
 
@@ -269,19 +283,68 @@ public class MusicLibraryService {
     }
 
 
-    public List<Song> addSongs(List<Song> newSongs) {
+    private String generateUrlForSong() {
+
+        String baseUrl = "https://www.razmusiclibrary.com/";
+
+        int length = 10;
+        boolean useLetters = true;
+        boolean useNumbers = true;
+
+        String randomSongCode = "";
+        String songUrl = "";
+        boolean randomSongCodeAlreadyUsed = false;
+
+        do {
+            randomSongCode = RandomStringUtils.random(length, useLetters, useNumbers);
+            songUrl = baseUrl + randomSongCode;
+            randomSongCodeAlreadyUsed = musicRepository.findByUrl(songUrl).isPresent();
+        } while ( randomSongCodeAlreadyUsed );
+
+        return songUrl;
+    }
+
+
+    public List<Song> uploadSongs(List<Song> newSongs) {
+
 
         for (Song song : newSongs) {
             song.setAddedOn(LocalDateTime.now());
             song.setAddedOnStringFormat(LocalDateTime.now().format(CUSTOM_FORMATTER));
-        }
 
-        this.songs.addAll(newSongs);
+            //song.setDownloaders(new HashSet<User>(){profileConfiguration.getMyProfile()}); use Set<String> set = new HashSet<>(Arrays.asList("a", "b", "c"));
+            song.setDownloaders(Collections.singleton(profileConfiguration.getMyProfile()));
+
+            song.setUploadingUser(profileConfiguration.getMyProfile().getUserName());
+
+            String songUrl = generateUrlForSong();
+            song.setUrl(songUrl);
+        }
         this.musicRepository.saveAll(newSongs);
+        this.songs.addAll(newSongs);
 
         String message = "You added new songs.";
         System.out.println(message);
         return newSongs;
+    }
+
+
+    public List<Song> downloadSongs(Long[] ids) {
+
+        for(Long id : ids) {
+            if (musicRepository.existsById(id)) {
+                Song song = musicRepository.findById(id).get();
+                song.getDownloaders()
+                        .add(profileConfiguration.getMyProfile());
+                musicRepository.save(song);
+                songs.add(song);
+            } else {
+                System.out.println("There is no song with the id:" + id);
+            }
+        }
+        String message = "You added on your profile new songs.";
+        System.out.println(message);
+        return songs;
     }
 
 
@@ -295,9 +358,15 @@ public class MusicLibraryService {
                 deletedSongs.add(song);
                 this.songs.remove(song);
                 System.out.println("Your song " + song.getSongName() +" has been deleted from songs.");
+
                 if (deleteDBSongs) {
-                    musicRepository.delete(song);
-                    System.out.println("Your song " + song.getSongName() +" has been deleted from the DB.");
+                    if( song.getUploadingUser().equals(profileConfiguration.getMyProfile().getUserName()) && song.getDownloaders().size() == 1 ) {
+                        musicRepository.delete(song);
+                        System.out.println("Your song " + song.getSongName() +" has been deleted from the DB.");
+                    } else{
+                        System.out.println("You can not delete song " + song.getId() + ":");
+                        System.out.println(" either you are not the uploader of the song or other users downloaded it.");
+                    }
                 }
             }
         }

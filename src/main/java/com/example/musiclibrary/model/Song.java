@@ -1,12 +1,9 @@
 package com.example.musiclibrary.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -44,18 +41,27 @@ public class Song implements Comparable<Song> {
     @Column(length = 200)
     private String lyrics;
 
+    @Column(name = "uploading_user", nullable = false)
+    private String uploadingUser;
+
     @Transient
     private boolean selected = false;
 
     @Column(nullable = false, name = "length_seconds")
-    private Long lengthSeconds;
+    private Long lengthSeconds = 0L;
+
+    @Column(nullable = false, unique = true)
+    private String url;
+
 
     // not in use
     @Transient
     private SongLength length;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "likedSongs", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "song_like",
+            joinColumns = @JoinColumn(name = "song_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> downloaders;
 
 

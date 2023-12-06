@@ -1,11 +1,12 @@
 package com.example.musiclibrary.service;
 
+import com.example.musiclibrary.model.ProfileConfiguration;
 import com.example.musiclibrary.model.User;
+import com.example.musiclibrary.repository.MusicRepository;
 import com.example.musiclibrary.repository.UserRepository;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,24 +15,27 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Data
 @Service
 @Transactional
 public class UserService {
 
-    @Value("${user.initial-username}")
-    private String userName;
-
-    private User myProfile;
 
     @Autowired
+    private ProfileConfiguration profileConfiguration;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MusicLibraryService musicLibraryService;
+    @Autowired
+    private MusicRepository musicRepository;
+
 
     @PostConstruct
     private void postConstruct() {
-        User oldProfile = userRepository.findUserByUserName(userName);
+        User oldProfile = userRepository.findUserByUserName(profileConfiguration.getInitialUsername());
         if(oldProfile != null) {
             LocalDate today = LocalDate.now();
             int updatedAge = (Period.between(oldProfile.getBirthdate(), today).getYears());
@@ -39,7 +43,7 @@ public class UserService {
                 oldProfile.setAge(updatedAge);
                 oldProfile = userRepository.save(oldProfile);
             }
-            this.myProfile = oldProfile;
+            profileConfiguration.setMyProfile(oldProfile);
         }
     }
 
@@ -47,13 +51,14 @@ public class UserService {
     public User switchProfile(String userName) {
         User profileSwitched = userRepository.findUserByUserName(userName);
         if(profileSwitched != null) {
-            this.myProfile = profileSwitched;
+            profileConfiguration.setMyProfile(profileSwitched);
+            musicLibraryService.updateMusicLibrary4NewProfile(userName);
         } else {
             System.out.println("Profile not found");
             return null;
         }
         System.out.println("You switched profile !");
-        return this.myProfile;
+        return profileConfiguration.getMyProfile();
     }
 
 
@@ -89,7 +94,21 @@ public class UserService {
     }
 
 
-    public User updateMyProfile(User user) {
+    public User findUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()) {
+            System.out.println("the user with the id: " + id + " does not exists !");
+            return null;
+        }
+        String message = "You asked to see the user by the id: " + id + " (see this response's body) !!";
+        System.out.println(message);
+        return user.get();
+    }
+
+
+    public User updateProfile(User user) {
+
+        User myProfile = profileConfiguration.getMyProfile();
 
         if (user.getFirstName() != null) {
             myProfile.setFirstName(user.getFirstName());
@@ -99,10 +118,17 @@ public class UserService {
             myProfile.setLastName(user.getLastName());
             System.out.println("You changed your last name, good job!)");
         }
-        if (user.getUserName() != null) {
-            myProfile.setUserName(user.getUserName());
-            System.out.println("You changed your user name, good job!)");
+
+        String newUserName = user.getUserName();
+        if(newUserName != null) {
+            if(userRepository.findUserByUserName(newUserName) == null) {
+                myProfile.setUserName(newUserName);
+                System.out.println("You changed your user name, good job!)");
+            } else {
+                System.out.println("You failed to change your userName because the username is already used you must put one different please! ");
+            }
         }
+
         if ( user.getPassword() != null && !StringUtils.equals(user.getPassword(), myProfile.getOldPassword()) ) {
             if ( checkValidityOfPassword(user) ) {
                 myProfile.setOldPassword(myProfile.getPassword());
@@ -112,11 +138,13 @@ public class UserService {
                 System.out.println("You failed to change your password! ");
             }
         }
+
         if (user.getAddress() != null) {
             myProfile.setAddress(user.getAddress());
             System.out.println("You changed your address, good job!)");
         }
 
+        profileConfiguration.setMyProfile(myProfile);
         user = userRepository.save(myProfile);
 
         System.out.println("You successfully changed your profile.");
@@ -137,7 +165,7 @@ public class UserService {
         }
 
         boolean hasSpecialCharacters = password.contains("!") || password.contains("£") || password.contains("$") || password.contains("%");
-        boolean containsName = ( StringUtils.isNotEmpty(user.getFirstName()) ) ? password.contains(user.getFirstName()) : password.contains(myProfile.getFirstName());
+        boolean containsName = ( StringUtils.isNotEmpty(user.getFirstName()) ) ? password.contains(user.getFirstName()) : password.contains(profileConfiguration.getMyProfile().getFirstName());
         boolean passwordValid = hasSpecialCharacters && !containsName && password.length() >= 8;
 
         if(!hasSpecialCharacters) {

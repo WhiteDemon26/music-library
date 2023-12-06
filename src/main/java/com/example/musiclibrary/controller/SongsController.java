@@ -29,10 +29,22 @@ public class SongsController {
     }
 
 
-    @GetMapping("/download_songs")
-    public ResponseEntity<List<Song>> downloadSongs(@RequestBody List<Song> songs) {
+    @GetMapping("/upload_songs")
+    public ResponseEntity<List<Song>> uploadSongs(@RequestBody List<Song> songs) {
         try {
-            return new ResponseEntity<>(musicLibraryService.addSongs(songs), HttpStatus.OK);
+            return new ResponseEntity<>(musicLibraryService.uploadSongs(songs), HttpStatus.OK);
+        } catch (Exception e) {
+            String message = "An error occurred while asking to add new songs !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
+            System.out.println(message);
+            return null;
+        }
+    }
+
+
+    @GetMapping("/download_songs")
+    public ResponseEntity<List<Song>> downloadSongs(@RequestParam("ids") Long[] ids) {
+        try {
+            return new ResponseEntity<>(musicLibraryService.downloadSongs(ids), HttpStatus.OK);
         } catch (Exception e) {
             String message = "An error occurred while asking to add new songs !! \n Exception: " + e.getClass().getName() + ". Message: " + e.getMessage() + ". Cause: " + e.getCause();
             System.out.println(message);
@@ -129,6 +141,7 @@ public class SongsController {
         }
     }
 
+
     @GetMapping("/play_next_song")
     public ResponseEntity<Song> playNextSong() {
         try {
@@ -139,6 +152,7 @@ public class SongsController {
             return null;
         }
     }
+
 
     @GetMapping("/play_previous_song")
     public ResponseEntity<Song> playPreviousSong() {

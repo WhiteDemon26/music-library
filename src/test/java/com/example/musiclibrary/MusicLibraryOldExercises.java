@@ -17,17 +17,6 @@ import static java.lang.Thread.sleep;
 public class MusicLibraryOldExercises {
 
 
-
-    public void getTimesPlayedSong() {
-        MusicLibraryService musicLibraryService = new MusicLibraryService();
-        List<Song> returnMusic = musicLibraryService.findMostPlayedSongs();
-        for (Song song : returnMusic) {
-            System.out.println(song.getSongName() + "has been played " + song.getTimesPlayed() + " times");
-        }
-    }
-
-
-
     public void checkIncreaseTimesPlayed() throws InterruptedException {
 
         List<Song> fakeSongs = new ArrayList<>();

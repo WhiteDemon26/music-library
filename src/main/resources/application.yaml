@@ -23,4 +23,4 @@ spring:
       ddl-auto: none
 
 user:
-  initial-username: WhiteDemon
+  initial-username: "WhiteDemon"
